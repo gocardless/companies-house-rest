@@ -1,3 +1,4 @@
+*.gem
 /vendor
 .DS_Store
 *.swp
