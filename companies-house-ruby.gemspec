@@ -1,11 +1,11 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'companies/house/ruby/version'
+require 'companies_house/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "companies-house-ruby"
-  spec.version       = Companies::House::Ruby::VERSION
+  spec.version       = CompaniesHouse::VERSION
   spec.authors       = ["Bruce Collie"]
   spec.email         = ["bruce@gocardless.com"]
 
