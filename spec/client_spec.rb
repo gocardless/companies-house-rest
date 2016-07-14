@@ -17,7 +17,7 @@ describe CompaniesHouse::Client do
       'X-Ratelimit-Reset' => '1468488290',
       'Cache-Control' => 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0',
       'X-Ratelimit-Limit' => '600',
-      'Access-Control-Expose-Headers' => 'Location,www-authenticate',
+      'Access-Control-Expose-Headers' => 'Location,www-authenticate'
     }
   end
 
@@ -58,13 +58,13 @@ describe CompaniesHouse::Client do
 
     describe '#company' do
       it 'should return a parsed JSON representation' do
-        expect(client.company(company_id)).to eq({'company' => 'data'})
+        expect(client.company(company_id)).to eq('company' => 'data')
       end
     end
 
     describe '#officers' do
       it 'should return a parsed JSON representation' do
-        expect(client.officers(company_id)).to eq({'officers' => ['data']})
+        expect(client.officers(company_id)).to eq('officers' => ['data'])
       end
     end
   end
