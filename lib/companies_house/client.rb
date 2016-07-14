@@ -22,14 +22,32 @@ module CompaniesHouse
       request(id)
     end
 
+    # The API endpoint for company officers is paginated, and not all of the officers may
+    # be returned in the first request. We deal with this by collating all the pages of
+    # results into one result set before returning them.
     def officers(id)
-      request(id, '/officers')
+      items = []
+      offset = 0
+
+      loop do
+        page = request(id, '/officers', start_index: offset)
+        total = page['total_results']
+        new_items = page['items']
+        items += new_items
+        offset += new_items.count
+        
+        break if items.count >= total
+      end
+
+      items
     end
 
     private
 
-    def request(company_id, extra_path = '')
+    def request(company_id, extra_path = '', params = {})
       uri = URI.join(endpoint, 'company/', "#{company_id}#{extra_path}")
+      uri.query = URI.encode_www_form(params)
+
       req = Net::HTTP::Get.new(uri)
       req.basic_auth api_key, ''
 

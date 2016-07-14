@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 require 'webmock/rspec'
+require 'json'
 
 describe CompaniesHouse::Client do
   let(:api_key) { 'el-psy-congroo' }
@@ -8,19 +9,6 @@ describe CompaniesHouse::Client do
   let(:company_id) { '07495895' }
   let(:client) { described_class.new(api_key: api_key, endpoint: example_endpoint) }
   before { WebMock.disable_net_connect! }
-
-  let(:success_headers) do
-    {
-      'Content-Type' => 'application/json',
-      'Date' => 'Thu, 14 Jul 2016 09:20:10 GMT',
-      'X-Ratelimit-Remain' => '598',
-      'Pragma' => 'no-cache',
-      'X-Ratelimit-Reset' => '1468488290',
-      'Cache-Control' => 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0',
-      'X-Ratelimit-Limit' => '600',
-      'Access-Control-Expose-Headers' => 'Location,www-authenticate'
-    }
-  end
 
   describe '#initialize' do
     describe 'with an API key' do
@@ -53,13 +41,34 @@ describe CompaniesHouse::Client do
   end
 
   context 'against a functioning API' do
+    let(:page1) do
+      {
+        items_per_page: 1,
+        total_results: 2,
+        start_index: 0,
+        items: ['item1']
+      }.to_json
+    end
+
+    let(:page2) do
+      {
+        items_per_page: 1,
+        total_results: 2,
+        start_index: 1,
+        items: ['item2']
+      }.to_json
+    end
+
     before do
       stub_request(:get, "#{example_endpoint}/company/#{company_id}").
         with(basic_auth: [api_key, '']).
-        to_return(body: '{"company": "data"}', status: 200, headers: success_headers)
+        to_return(body: '{"company": "data"}', status: 200)
       stub_request(:get, "#{example_endpoint}/company/#{company_id}/officers").
-        with(basic_auth: [api_key, '']).
-        to_return(body: '{"officers": ["data"]}', status: 200, headers: success_headers)
+        with(basic_auth: [api_key, ''], query: {"start_index" => 0}).
+        to_return(body: page1, status: 200)
+      stub_request(:get, "#{example_endpoint}/company/#{company_id}/officers").
+        with(basic_auth: [api_key, ''], query: {"start_index" => 1}).
+        to_return(body: page2, status: 200)
     end
 
     describe '#company' do
@@ -70,7 +79,7 @@ describe CompaniesHouse::Client do
 
     describe '#officers' do
       it 'should return a parsed JSON representation' do
-        expect(client.officers(company_id)).to eq('officers' => ['data'])
+        expect(client.officers(company_id)).to eq(['item1', 'item2'])
       end
     end
   end
@@ -81,7 +90,7 @@ describe CompaniesHouse::Client do
         with(basic_auth: [api_key, '']).
         to_return(status: status)
       stub_request(:get, "#{example_endpoint}/company/#{company_id}/officers").
-        with(basic_auth: [api_key, '']).
+        with(basic_auth: [api_key, ''], query: {'start_index' => 0}).
         to_return(status: status)
     end
 
