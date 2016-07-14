@@ -129,5 +129,39 @@ describe CompaniesHouse::Client do
         end
       end
     end
+
+    context '401' do
+      let(:status) { 401 }
+      let(:message) { "Invalid API key - HTTP 401" }
+
+      describe '#company' do
+        it_should_behave_like 'an error response' do
+          let(:request) { client.company(company_id) }
+        end
+      end
+
+      describe '#officers' do
+        it_should_behave_like 'an error response' do
+          let(:request) { client.officers(company_id) }
+        end
+      end
+    end
+
+    context 'any other code' do
+      let(:status) { 342 }
+      let(:message) { "Unknown API response - HTTP 342" }
+
+      describe '#company' do
+        it_should_behave_like 'an error response' do
+          let(:request) { client.company(company_id) }
+        end
+      end
+
+      describe '#officers' do
+        it_should_behave_like 'an error response' do
+          let(:request) { client.officers(company_id) }
+        end
+      end
+    end
   end
 end
