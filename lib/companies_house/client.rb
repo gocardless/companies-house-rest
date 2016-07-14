@@ -13,5 +13,11 @@ module CompaniesHouse
       @api_key = config[:api_key]
       @endpoint = config[:endpoint] || ENDPOINT
     end
+
+    def company(id)
+    end
+
+    def officers(id)
+    end
   end
 end
