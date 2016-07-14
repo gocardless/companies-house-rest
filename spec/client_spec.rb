@@ -6,6 +6,7 @@ describe CompaniesHouse::Client do
   let(:api_key) { 'el-psy-congroo' }
   let(:example_endpoint) { 'https://api.example.com:8000' }
   let(:company_id) { '07495895' }
+  let(:client) { described_class.new(api_key: api_key, endpoint: example_endpoint) }
   before { WebMock.disable_net_connect! }
 
   let(:success_headers) do
@@ -36,8 +37,8 @@ describe CompaniesHouse::Client do
     end
 
     it 'accepts an alternate endpoint' do
-      client = described_class.new(api_key: api_key, endpoint: example_endpoint)
-      expect(client.endpoint).to eq example_endpoint
+      alt_client = described_class.new(api_key: api_key, endpoint: example_endpoint)
+      expect(alt_client.endpoint).to eq example_endpoint
     end
 
     it 'rejects your insecure http endpoint' do
@@ -51,8 +52,7 @@ describe CompaniesHouse::Client do
     end
   end
 
-  context 'against an API' do
-    let(:client) { described_class.new(api_key: api_key, endpoint: example_endpoint) }
+  context 'against a functioning API' do
     before do
       stub_request(:get, "#{example_endpoint}/company/#{company_id}").
         with(basic_auth: [api_key, '']).
@@ -71,6 +71,42 @@ describe CompaniesHouse::Client do
     describe '#officers' do
       it 'should return a parsed JSON representation' do
         expect(client.officers(company_id)).to eq('officers' => ['data'])
+      end
+    end
+  end
+
+  context 'when the API returns an error' do
+    context '404' do
+      before do
+        stub_request(:get, "#{example_endpoint}/company/#{company_id}").
+          with(basic_auth: [api_key, '']).
+          to_return(status: 404)
+        stub_request(:get, "#{example_endpoint}/company/#{company_id}/officers").
+          with(basic_auth: [api_key, '']).
+          to_return(status: 404)
+      end
+
+      shared_examples 'a 404 response' do
+        it 'should raise an APIError about the 404' do
+          expect { request }.to raise_error do |error|
+            expect(error).to be_a(CompaniesHouse::APIError)
+            expect(error.status).to eq('404')
+            expect(error.response).to be_a(Net::HTTPResponse)
+            expect(error.message).to eq("Company #{company_id} not found - HTTP 404")
+          end
+        end
+      end
+
+      describe '#company' do
+        it_should_behave_like 'a 404 response' do
+          let(:request) { client.company(company_id) }
+        end
+      end
+
+      describe '#officers' do
+        it_should_behave_like 'a 404 response' do
+          let(:request) { client.officers(company_id) }
+        end
       end
     end
   end
