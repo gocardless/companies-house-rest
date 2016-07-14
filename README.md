@@ -74,8 +74,10 @@ will be raised. The additional fields available on an instance of this class are
 
 ## Development
 
-Tests are written using RSpec, and Rubocop is used to provide linting. To run tests and
-Rubocop:
+This gem is configured for development using a `bundler` workflow.
+Tests are written using RSpec, and Rubocop is used to provide linting.
+
+To run all tests and Rubocop:
 
 ```shell
 bundle exec rake
