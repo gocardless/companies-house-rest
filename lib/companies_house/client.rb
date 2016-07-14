@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'companies_house/api_error'
 require 'net/http'
 require 'json'
 
@@ -18,26 +19,35 @@ module CompaniesHouse
     end
 
     def company(id)
-      uri = URI.join(endpoint, 'company/', id)
-      request(uri)
+      request(id)
     end
 
     def officers(id)
-      uri = URI.join(endpoint, 'company/', "#{id}/officers")
-      request(uri)
+      request(id, '/officers')
     end
 
     private
 
-    def request(uri)
+    def request(company_id, extra_path = '')
+      uri = URI.join(endpoint, 'company/', "#{company_id}#{extra_path}")
       req = Net::HTTP::Get.new(uri)
       req.basic_auth api_key, ''
 
-      resp = Net::HTTP.start(uri.host, uri.port, use_ssl: true) do |http|
-        http.request req
+      Net::HTTP.start(uri.host, uri.port, use_ssl: true) do |http|
+        response = http.request req
+        parse(response, company_id)
       end
+    end
 
-      JSON[resp.body]
+    def parse(response, company_id)
+      case response.code
+      when '200'
+        return JSON[response.body]
+      when '404'
+        raise CompaniesHouse::APIError.new("Company #{company_id} not found", response)
+      else
+        raise NotImplementedError
+      end
     end
   end
 end
