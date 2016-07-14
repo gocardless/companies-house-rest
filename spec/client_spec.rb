@@ -40,6 +40,12 @@ describe CompaniesHouse::Client do
       expect(client.endpoint).to eq example_endpoint
     end
 
+    it 'rejects your insecure http endpoint' do
+      expect do
+        described_class.new(api_key: 'zz', endpoint: 'http://example.net')
+      end.to raise_error(ArgumentError)
+    end
+
     it 'demands an API key' do
       expect { described_class.new({}) }.to raise_error(ArgumentError)
     end
