@@ -45,6 +45,8 @@ module CompaniesHouse
         return JSON[response.body]
       when '404'
         raise CompaniesHouse::APIError.new("Company #{company_id} not found", response)
+      when '429'
+        raise CompaniesHouse::APIError.new("Rate limit exceeded", response)
       else
         raise NotImplementedError
       end

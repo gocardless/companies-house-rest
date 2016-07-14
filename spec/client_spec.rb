@@ -76,35 +76,55 @@ describe CompaniesHouse::Client do
   end
 
   context 'when the API returns an error' do
-    context '404' do
-      before do
-        stub_request(:get, "#{example_endpoint}/company/#{company_id}").
-          with(basic_auth: [api_key, '']).
-          to_return(status: 404)
-        stub_request(:get, "#{example_endpoint}/company/#{company_id}/officers").
-          with(basic_auth: [api_key, '']).
-          to_return(status: 404)
-      end
+    before do
+      stub_request(:get, "#{example_endpoint}/company/#{company_id}").
+        with(basic_auth: [api_key, '']).
+        to_return(status: status)
+      stub_request(:get, "#{example_endpoint}/company/#{company_id}/officers").
+        with(basic_auth: [api_key, '']).
+        to_return(status: status)
+    end
 
-      shared_examples 'a 404 response' do
-        it 'should raise an APIError about the 404' do
-          expect { request }.to raise_error do |error|
-            expect(error).to be_a(CompaniesHouse::APIError)
-            expect(error.status).to eq('404')
-            expect(error.response).to be_a(Net::HTTPResponse)
-            expect(error.message).to eq("Company #{company_id} not found - HTTP 404")
-          end
+    shared_examples 'an error response' do
+      it 'should raise an APIError about the 404' do
+        expect { request }.to raise_error do |error|
+          expect(error).to be_a(CompaniesHouse::APIError)
+          expect(error.status).to eq(status.to_s)
+          expect(error.response).to be_a(Net::HTTPResponse)
+          expect(error.message).to eq(message)
         end
       end
+    end
+
+    context '404' do
+      let(:status) { 404 }
+      let(:message) { "Company #{company_id} not found - HTTP 404" }
 
       describe '#company' do
-        it_should_behave_like 'a 404 response' do
+        it_should_behave_like 'an error response' do
           let(:request) { client.company(company_id) }
         end
       end
 
       describe '#officers' do
-        it_should_behave_like 'a 404 response' do
+        it_should_behave_like 'an error response' do
+          let(:request) { client.officers(company_id) }
+        end
+      end
+    end
+
+    context '429' do
+      let(:status) { 429 }
+      let(:message) { "Rate limit exceeded - HTTP 429" }
+
+      describe '#company' do
+        it_should_behave_like 'an error response' do
+          let(:request) { client.company(company_id) }
+        end
+      end
+
+      describe '#officers' do
+        it_should_behave_like 'an error response' do
           let(:request) { client.officers(company_id) }
         end
       end
