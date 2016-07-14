@@ -43,10 +43,14 @@ module CompaniesHouse
       case response.code
       when '200'
         return JSON[response.body]
+      when '401'
+        raise CompaniesHouse::APIError.new("Invalid API key", response)
       when '404'
         raise CompaniesHouse::APIError.new("Company #{company_id} not found", response)
+      when '429'
+        raise CompaniesHouse::APIError.new("Rate limit exceeded", response)
       else
-        raise NotImplementedError
+        raise CompaniesHouse::APIError.new("Unknown API response", response)
       end
     end
   end
