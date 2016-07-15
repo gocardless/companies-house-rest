@@ -5,7 +5,7 @@ require 'json'
 
 describe CompaniesHouse::Client do
   let(:api_key) { 'el-psy-congroo' }
-  let(:example_endpoint) { 'https://api.example.com:8000' }
+  let(:example_endpoint) { URI('https://api.example.com:8000') }
   let(:company_id) { '07495895' }
   let(:client) { described_class.new(api_key: api_key, endpoint: example_endpoint) }
   before { WebMock.disable_net_connect! }
@@ -20,7 +20,7 @@ describe CompaniesHouse::Client do
       end
 
       it 'sets a default endpoint' do
-        expect(client.endpoint).to eq 'https://api.companieshouse.gov.uk'
+        expect(client.endpoint).to eq URI('https://api.companieshouse.gov.uk')
       end
     end
 
@@ -165,6 +165,22 @@ describe CompaniesHouse::Client do
       let(:message) { "Unknown API response - HTTP 342" }
       let(:error_class) { CompaniesHouse::APIError }
       it_should_behave_like 'an API with consistent error handling'
+    end
+  end
+
+  describe '#end_connection' do
+    it 'should not throw an exception if not started' do
+      allow(client.connection).to receive(:started?).
+        and_return(false)
+
+      expect { client.end_connection }.not_to raise_error
+    end
+
+    it 'is idempotent' do
+      expect do
+        client.end_connection
+        client.end_connection
+      end.not_to raise_error
     end
   end
 end
