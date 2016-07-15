@@ -1,7 +1,7 @@
 # CompaniesHouse
 
 This Gem implements an API client for the Companies House REST API. More information about
-the API can be found here
+the API can be found
 [here](https://developer.companieshouse.gov.uk/api/docs/index.html).
 
 Currently for internal use at GoCardless, but could be open-sourced in the future as other
