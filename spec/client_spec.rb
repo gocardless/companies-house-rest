@@ -95,11 +95,7 @@ describe CompaniesHouse::Client do
         end
       end
     end
-
-    context '404' do
-      let(:status) { 404 }
-      let(:message) { "Company #{company_id} not found - HTTP 404" }
-
+    shared_examples 'an API with consistent error handling' do
       describe '#company' do
         it_should_behave_like 'an error response' do
           let(:request) { client.company(company_id) }
@@ -111,57 +107,30 @@ describe CompaniesHouse::Client do
           let(:request) { client.officers(company_id) }
         end
       end
+    end
+
+    context '404' do
+      let(:status) { 404 }
+      let(:message) { "Company #{company_id} not found - HTTP 404" }
+      it_should_behave_like 'an API with consistent error handling'
     end
 
     context '429' do
       let(:status) { 429 }
       let(:message) { "Rate limit exceeded - HTTP 429" }
-
-      describe '#company' do
-        it_should_behave_like 'an error response' do
-          let(:request) { client.company(company_id) }
-        end
-      end
-
-      describe '#officers' do
-        it_should_behave_like 'an error response' do
-          let(:request) { client.officers(company_id) }
-        end
-      end
+      it_should_behave_like 'an API with consistent error handling'
     end
 
     context '401' do
       let(:status) { 401 }
       let(:message) { "Invalid API key - HTTP 401" }
-
-      describe '#company' do
-        it_should_behave_like 'an error response' do
-          let(:request) { client.company(company_id) }
-        end
-      end
-
-      describe '#officers' do
-        it_should_behave_like 'an error response' do
-          let(:request) { client.officers(company_id) }
-        end
-      end
+      it_should_behave_like 'an API with consistent error handling'
     end
 
     context 'any other code' do
       let(:status) { 342 }
       let(:message) { "Unknown API response - HTTP 342" }
-
-      describe '#company' do
-        it_should_behave_like 'an error response' do
-          let(:request) { client.company(company_id) }
-        end
-      end
-
-      describe '#officers' do
-        it_should_behave_like 'an error response' do
-          let(:request) { client.officers(company_id) }
-        end
-      end
+      it_should_behave_like 'an API with consistent error handling'
     end
   end
 end
