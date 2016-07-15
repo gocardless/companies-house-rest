@@ -9,6 +9,7 @@ AllCops:
     - .*/**/*
     - vendor/**/*
     - bin/**/*
+    - lib/companies-house.rb
 
 # Limit lines to 80 characters.
 Metrics/LineLength:
