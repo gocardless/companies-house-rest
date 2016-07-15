@@ -14,8 +14,8 @@ module CompaniesHouse
     def initialize(config)
       raise ArgumentError, 'Missing API key' unless config[:api_key]
       @api_key = config[:api_key]
-      @endpoint = config[:endpoint] || ENDPOINT
-      raise ArgumentError, 'HTTP is not supported' if URI(@endpoint).scheme != 'https'
+      @endpoint = URI(config[:endpoint] || ENDPOINT)
+      raise ArgumentError, 'HTTP is not supported' if @endpoint.scheme != 'https'
     end
 
     def company(id)
@@ -51,10 +51,8 @@ module CompaniesHouse
       req = Net::HTTP::Get.new(uri)
       req.basic_auth api_key, ''
 
-      Net::HTTP.start(uri.host, uri.port, use_ssl: true) do |http|
-        response = http.request req
-        parse(response, company_id)
-      end
+      response = connection.request req
+      parse(response, company_id)
     end
 
     def parse(response, company_id)
@@ -70,6 +68,12 @@ module CompaniesHouse
       else
         raise CompaniesHouse::APIError.new("Unknown API response", response)
       end
+    end
+
+    def connection
+      @connection ||= Net::HTTP.new(endpoint.host, endpoint.port)
+      @connection.use_ssl = true
+      @connection
     end
   end
 end
