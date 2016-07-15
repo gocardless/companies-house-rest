@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'companies_house/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "companies-house-ruby"
+  spec.name          = "companies-house"
   spec.version       = CompaniesHouse::VERSION
   spec.authors       = ["Bruce Collie"]
   spec.email         = ["bruce@gocardless.com"]
