@@ -1,7 +1,7 @@
 # CompaniesHouse
 
 This Gem implements an API client for the Companies House REST API. More information about
-the API can be found here
+the API can be found
 [here](https://developer.companieshouse.gov.uk/api/docs/index.html).
 
 Currently for internal use at GoCardless, but could be open-sourced in the future as other
@@ -25,7 +25,7 @@ Or install it yourself as:
 
 ## Usage
 
-### Authentication
+### Authentication
 
 Using the Companies House REST API requires you to register an account
 [here](https://beta.companieshouse.gov.uk). Once your account is confirmed you will be
@@ -47,7 +47,7 @@ hash are:
 | `:api_key` | Required. The API key received after registration. |
 | `:endpoint` | Optional. Specifies the base URI for the API (e.g. if using a self-hosted version) |
 
-### Making a Request
+### Making a Request
 
 Once a client has been initialised, requests can be made to the API. The endpoints
 currently implemented by the gem are:
@@ -61,7 +61,7 @@ Response data is given as a hash object directly obtained from the response JSON
 of the available fields in the response are in the Companies House
 [documentation](https://developer.companieshouse.gov.uk/api/docs/index.html).
 
-### Error Handling
+### Error Handling
 
 If a request to the API returns with a status code other than `200 OK`, no response data
 will be returned to the caller. Instead, an exception of type `CompaniesHouse::APIError`
