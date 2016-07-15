@@ -41,45 +41,66 @@ describe CompaniesHouse::Client do
   end
 
   context 'against a functioning API' do
-    let(:page1) do
-      {
-        items_per_page: 1,
-        total_results: 2,
-        start_index: 0,
-        items: ['item1']
-      }.to_json
-    end
-
-    let(:page2) do
-      {
-        items_per_page: 1,
-        total_results: 2,
-        start_index: 1,
-        items: ['item2']
-      }.to_json
-    end
-
-    before do
-      stub_request(:get, "#{example_endpoint}/company/#{company_id}").
-        with(basic_auth: [api_key, '']).
-        to_return(body: '{"company": "data"}', status: 200)
-      stub_request(:get, "#{example_endpoint}/company/#{company_id}/officers").
-        with(basic_auth: [api_key, ''], query: { "start_index" => 0 }).
-        to_return(body: page1, status: 200)
-      stub_request(:get, "#{example_endpoint}/company/#{company_id}/officers").
-        with(basic_auth: [api_key, ''], query: { "start_index" => 1 }).
-        to_return(body: page2, status: 200)
-    end
-
     describe '#company' do
+      before do
+        stub_request(:get, "#{example_endpoint}/company/#{company_id}").
+          with(basic_auth: [api_key, '']).
+          to_return(body: '{"company": "data"}', status: 200)
+      end
       it 'should return a parsed JSON representation' do
         expect(client.company(company_id)).to eq('company' => 'data')
       end
     end
 
     describe '#officers' do
-      it 'should return a parsed JSON representation' do
-        expect(client.officers(company_id)).to eq(%w(item1 item2))
+      context 'when all results are on a single page' do
+        let(:single_page) do
+          {
+            items_per_page: 2,
+            total_results: 2,
+            start_index: 0,
+            items: %w(item1 item2)
+          }.to_json
+        end
+        before do
+          stub_request(:get, "#{example_endpoint}/company/#{company_id}/officers").
+            with(basic_auth: [api_key, ''], query: { "start_index" => 0 }).
+            to_return(body: single_page, status: 200)
+        end
+        it 'should return items from the one, single page' do
+          expect(client.officers(company_id)).to eq(%w(item1 item2))
+        end
+      end
+
+      context 'when results are spread across several pages' do
+        let(:page1) do
+          {
+            items_per_page: 1,
+            total_results: 2,
+            start_index: 0,
+            items: ['item1']
+          }.to_json
+        end
+
+        let(:page2) do
+          {
+            items_per_page: 1,
+            total_results: 2,
+            start_index: 1,
+            items: ['item2']
+          }.to_json
+        end
+        before do
+          stub_request(:get, "#{example_endpoint}/company/#{company_id}/officers").
+            with(basic_auth: [api_key, ''], query: { "start_index" => 0 }).
+            to_return(body: page1, status: 200)
+          stub_request(:get, "#{example_endpoint}/company/#{company_id}/officers").
+            with(basic_auth: [api_key, ''], query: { "start_index" => 1 }).
+            to_return(body: page2, status: 200)
+        end
+        it 'should return items from all pages' do
+          expect(client.officers(company_id)).to eq(%w(item1 item2))
+        end
       end
     end
   end
