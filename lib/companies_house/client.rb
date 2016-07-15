@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 require 'companies_house/api_error'
+require 'companies_house/not_found_error'
+require 'companies_house/authentication_error'
+require 'companies_house/rate_limit_error'
 require 'net/http'
 require 'json'
 
@@ -62,11 +65,11 @@ module CompaniesHouse
       when '200'
         return JSON[response.body]
       when '401'
-        raise CompaniesHouse::APIError.new("Invalid API key", response)
+        raise CompaniesHouse::AuthenticationError, response
       when '404'
-        raise CompaniesHouse::APIError.new("Company #{company_id} not found", response)
+        raise CompaniesHouse::NotFoundError.new(company_id, response)
       when '429'
-        raise CompaniesHouse::APIError.new("Rate limit exceeded", response)
+        raise CompaniesHouse::RateLimitError, response
       else
         raise CompaniesHouse::APIError.new("Unknown API response", response)
       end
