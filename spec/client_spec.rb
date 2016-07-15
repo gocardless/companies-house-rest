@@ -64,10 +64,10 @@ describe CompaniesHouse::Client do
         with(basic_auth: [api_key, '']).
         to_return(body: '{"company": "data"}', status: 200)
       stub_request(:get, "#{example_endpoint}/company/#{company_id}/officers").
-        with(basic_auth: [api_key, ''], query: {"start_index" => 0}).
+        with(basic_auth: [api_key, ''], query: { "start_index" => 0 }).
         to_return(body: page1, status: 200)
       stub_request(:get, "#{example_endpoint}/company/#{company_id}/officers").
-        with(basic_auth: [api_key, ''], query: {"start_index" => 1}).
+        with(basic_auth: [api_key, ''], query: { "start_index" => 1 }).
         to_return(body: page2, status: 200)
     end
 
@@ -79,7 +79,7 @@ describe CompaniesHouse::Client do
 
     describe '#officers' do
       it 'should return a parsed JSON representation' do
-        expect(client.officers(company_id)).to eq(['item1', 'item2'])
+        expect(client.officers(company_id)).to eq(%w(item1 item2))
       end
     end
   end
@@ -90,7 +90,7 @@ describe CompaniesHouse::Client do
         with(basic_auth: [api_key, '']).
         to_return(status: status)
       stub_request(:get, "#{example_endpoint}/company/#{company_id}/officers").
-        with(basic_auth: [api_key, ''], query: {'start_index' => 0}).
+        with(basic_auth: [api_key, ''], query: { 'start_index' => 0 }).
         to_return(status: status)
     end
 

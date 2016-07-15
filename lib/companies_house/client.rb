@@ -35,7 +35,7 @@ module CompaniesHouse
         new_items = page['items']
         items += new_items
         offset += new_items.count
-        
+
         break if items.count >= total
       end
 
