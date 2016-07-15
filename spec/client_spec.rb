@@ -163,4 +163,20 @@ describe CompaniesHouse::Client do
       it_should_behave_like 'an API with consistent error handling'
     end
   end
+
+  describe '#end_connection' do
+    it 'should not throw an exception if not started' do
+      allow(client.connection).to receive(:started?).
+        and_return(false)
+
+      expect { client.end_connection }.not_to raise_error
+    end
+
+    it 'is idempotent' do
+      expect do
+        client.end_connection
+        client.end_connection
+      end.not_to raise_error
+    end
+  end
 end

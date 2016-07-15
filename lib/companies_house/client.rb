@@ -18,6 +18,10 @@ module CompaniesHouse
       raise ArgumentError, 'HTTP is not supported' if @endpoint.scheme != 'https'
     end
 
+    def end_connection
+      @connection.finish if @connection && @connection.started?
+    end
+
     def company(id)
       request(id)
     end
@@ -40,6 +44,12 @@ module CompaniesHouse
       end
 
       items
+    end
+
+    def connection
+      @connection ||= Net::HTTP.new(endpoint.host, endpoint.port).tap do |conn|
+        conn.use_ssl = true
+      end
     end
 
     private
@@ -68,12 +78,6 @@ module CompaniesHouse
       else
         raise CompaniesHouse::APIError.new("Unknown API response", response)
       end
-    end
-
-    def connection
-      @connection ||= Net::HTTP.new(endpoint.host, endpoint.port)
-      @connection.use_ssl = true
-      @connection
     end
   end
 end
