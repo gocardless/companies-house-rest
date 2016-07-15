@@ -10,7 +10,3 @@ test:
   pre:
     - bundle exec rubocop:
         parallel: true
-        files:
-          - Rakefile
-          - lib/**/*.rb
-          - spec/**/*.rb
