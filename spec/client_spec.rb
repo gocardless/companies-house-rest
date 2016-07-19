@@ -139,6 +139,24 @@ describe CompaniesHouse::Client do
       end
     end
 
+    context 'invalid company id' do
+      let(:company_id) { 'invalid' }
+      let(:message) { "Company number #{company_id} is invalid" }
+      let(:status) { 0 }
+      before do
+        allow(CompaniesHouse::RegistrationNumber).
+          to receive(:valid?).
+          and_return(false)
+      end
+
+      it 'handles invalid company numbers' do
+        expect { client.company(company_id) }.to raise_error do |error|
+          expect(error).to be_a(CompaniesHouse::InvalidCompanyNumberError)
+          expect(error.message).to eq(message)
+        end
+      end
+    end
+
     context '404' do
       let(:status) { 404 }
       let(:message) { "Company #{company_id} not found - HTTP 404" }

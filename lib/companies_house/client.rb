@@ -3,6 +3,9 @@ require 'companies_house/api_error'
 require 'companies_house/not_found_error'
 require 'companies_house/authentication_error'
 require 'companies_house/rate_limit_error'
+require 'companies_house/invalid_company_number_error'
+require 'companies_house/registration_number'
+
 require 'net/http'
 require 'json'
 
@@ -58,6 +61,9 @@ module CompaniesHouse
     private
 
     def request(company_id, extra_path = '', params = {})
+      raise CompaniesHouse::InvalidCompanyNumberError, company_id unless
+          CompaniesHouse::RegistrationNumber.valid?(company_id)
+
       uri = URI.join(endpoint, 'company/', "#{company_id}#{extra_path}")
       uri.query = URI.encode_www_form(params)
 
