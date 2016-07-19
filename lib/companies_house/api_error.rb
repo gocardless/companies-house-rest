@@ -5,11 +5,14 @@ module CompaniesHouse
   class APIError < StandardError
     attr_reader :status, :response
 
-    def initialize(msg, response)
-      msg = "#{msg} - HTTP #{response.code}"
+    def initialize(msg, response = nil)
+      if response
+        msg = "#{msg} - HTTP #{response.code}"
+        @status = response.code
+      end
+
       super(msg)
       @response = response
-      @status = response.code
     end
   end
 end
