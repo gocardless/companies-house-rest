@@ -65,12 +65,21 @@ of the available fields in the response are in the Companies House
 
 If a request to the API returns with a status code other than `200 OK`, no response data
 will be returned to the caller. Instead, an exception of type `CompaniesHouse::APIError`
-will be raised. The additional fields available on an instance of this class are:
+will be raised.
 
-| Field | Description |
+The subclass of `CompaniesHouse::APIError` that is raised will give more information about
+the error where possible. If none of these error types are appropriate, an instance of
+`CompaniesHouse::APIError` will be raised instead.
+
+| Error Type | Description |
 | ----- | ----------- |
-| `response` | The Net::HTTP response object from the failed API call. |
-| `status` | A string containing the response status code. |
+| `NotFoundError` | The company number given does not correspond to a company. |
+| `RateLimitError` | The API rate limit has been reached for the current time window. |
+| `AuthenticationError` | The API key given is invalid. |
+
+If an error has been raised due to an HTTP response code (i.e. any that is not `200 OK`),
+error objects will have the fields `response` and `status` available. They will be `nil`
+if no HTTP response was received.
 
 ## Development
 
