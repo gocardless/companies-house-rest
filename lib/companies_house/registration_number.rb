@@ -20,9 +20,8 @@ module CompaniesHouse
     end
 
     def self.sanitise(number)
-      # Currently all examples of invalid company number stored in the database result
-      # from spaces being incorrectly inserted - if other types of invalid number appear
-      # then we should update this method to reflect those.
+      # Currently will only remove spaces from company numbers - could be extended in the
+      # future to correct other kinds of error.
       number.delete(" ")
     end
   end

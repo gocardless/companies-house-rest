@@ -92,23 +92,23 @@ RSpec.describe CompaniesHouse::RegistrationNumber do
   end
 
   describe '.sanitise' do
-    let(:number) { described_class.sanitise(invalid) }
+    let(:number) { described_class.sanitise(unsanitised) }
 
     context 'spaces in number' do
-      let(:invalid) { 'NC 000 111' }
+      let(:unsanitised) { 'NC 000 111' }
       it_behaves_like 'validates'
     end
 
     context 'other invalid characters' do
-      let(:invalid) { 'SO:12:34:56' }
+      let(:unsanitised) { 'SO:12:34:56' }
       it_behaves_like 'rejects'
     end
 
     context 'valid number' do
-      let(:invalid) { 'NI123456' }
+      let(:unsanitised) { 'NI123456' }
 
       it 'does not change the number' do
-        expect(number).to eq(invalid)
+        expect(number).to eq(unsanitised)
       end
 
       it_behaves_like 'validates'
