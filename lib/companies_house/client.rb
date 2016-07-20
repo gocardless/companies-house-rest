@@ -61,6 +61,7 @@ module CompaniesHouse
     private
 
     def request(company_id, extra_path = '', params = {})
+      company_id = CompaniesHouse::RegistrationNumber.sanitise(company_id)
       raise CompaniesHouse::InvalidCompanyNumberError, company_id unless
           CompaniesHouse::RegistrationNumber.valid?(company_id)
 
