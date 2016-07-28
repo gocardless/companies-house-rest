@@ -3,8 +3,12 @@
 This Gem implements an API client for the Companies House REST API. It can be
 used to look up information about companies registered in the United Kingdom.
 As of July 2016, this API is described by Companies House as a "beta service."
-More information about the API can be found
+More information about this free API can be found
 [on the Companies House API website](https://developer.companieshouse.gov.uk/api/docs/index.html).
+
+To interact the older [CompaniesHouse XML-based API](http://xmlgw.companieshouse.gov.uk/),
+see the gem [companies-house-gateway](https://github.com/gocardless/companies-house-gateway-ruby).
+(Monthly subscription [fees](http://xmlgw.companieshouse.gov.uk/CHDpriceList.shtml), and other fees, may apply.)
 
 Quick start:
 
