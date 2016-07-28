@@ -14,7 +14,7 @@ Gem::Specification.new do |spec|
   spec.description   = %q{Client for the Companies House REST API. Provides company profiles and officer lists.}
   spec.homepage      = "https://github.com/gocardless/companies-house-ruby"
 
-  spec.files         = `git ls-files -z lib/ companies-house.gemspec README.md`.split("\x0")
+  spec.files         = `git ls-files -z lib/ companies-house.gemspec LICENSE README.md`.split("\x0")
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
