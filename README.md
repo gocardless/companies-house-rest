@@ -1,95 +1,147 @@
-# CompaniesHouse
+# CompaniesHouse::Client
 
-This Gem implements an API client for the Companies House REST API. More information about
-the API can be found
-[here](https://developer.companieshouse.gov.uk/api/docs/index.html).
+This Gem implements an API client for the Companies House REST API. It can be
+used to look up information about companies registered in the United Kingdom.
+As of July 2016, this API is described by Companies House as a "beta service."
+More information about this free API can be found
+[on the Companies House API website](https://developer.companieshouse.gov.uk/api/docs/index.html).
 
-Currently for internal use at GoCardless, but could be open-sourced in the future as other
-similar projects have been.
+To interact the older [CompaniesHouse XML-based API](http://xmlgw.companieshouse.gov.uk/),
+see the gem [companies-house-gateway](https://github.com/gocardless/companies-house-gateway-ruby).
+(Monthly subscription [fees](http://xmlgw.companieshouse.gov.uk/CHDpriceList.shtml), and other fees, may apply.)
 
-## Installation
+Quick start:
 
-Add this line to your application's Gemfile:
+* Register an account via the `Sign In / Register` link
+[on the CompaniesHouse Developers website](https://developer.companieshouse.gov.uk/api/docs/)
+* Register an API key at [Your Applications](https://developer.companieshouse.gov.uk/developer/applications)
+* Put your API key in an environment variable (not in your code):
 
-```ruby
-gem 'companies-house-ruby'
+``` shell
+export COMPANIES_HOUSE_API_KEY=YOUR_API_KEY_HERE
+
 ```
 
-And then execute:
+* Create and use a client:
 
-    $ bundle
+``` ruby
+require 'companies_house/client'
+client = CompaniesHouse::Client.new(api_key: ENV['COMPANIES_HOUSE_API_KEY'])
+profile = client.company('07495895')
+```
 
-Or install it yourself as:
 
-    $ gem install companies-house-ruby
+## Overview
+This gem is meant to provide a simple synchronous API to look up company profile
+information and company officers. The data returned is parsed JSON.
 
-## Usage
+This gem provides information on companies by their Companies House company
+number. This "company number" is actually a string and should be treated as such.
+The string may consist solely of digits (including leading 0s) or begin with
+alphabetic characters such as `NI` or `SC`.
 
-### Authentication
+## Authentication
 
 Using the Companies House REST API requires you to register an account
-[here](https://beta.companieshouse.gov.uk). Once your account is confirmed you will be
-given access to the API via an API key.
+[on the CompaniesHouse Developers website](https://developer.companieshouse.gov.uk/api/docs/)
+and [configure an API key](https://developer.companieshouse.gov.uk/developer/applications).
+Developers should read
+[the Companies House developer guidelines](https://developer.companieshouse.gov.uk/api/docs/index/gettingStarted/developerGuidelines.html)
+before using this API, and will note that these guidelines contain several
+instructions regarding API keys:
 
-### Initialising a Client
+* Do not embed API keys in your code
+* Do not store API keys in your source tree
+* Restrict API key use by IP address and domain
+* **Regenerate your API keys regularly**
+* Delete API keys when no longer required
+
+## Client Initialization
 
 All requests to the API are made through a client object:
 
 ```ruby
+require 'companies_house/client'
 client = CompaniesHouse::Client.new(config)
 ```
 
 The client is configured by passing a hash to the constructor. The supported keys for this
 hash are:
 
-| Key | Description |
-| --- | ----------- |
-| `:api_key` | Required. The API key received after registration. |
+| Key         | Description |
+| ----------- | ----------- |
+| `:api_key`  | Required. The API key received after registration. |
 | `:endpoint` | Optional. Specifies the base URI for the API (e.g. if using a self-hosted version) |
 
-### Making a Request
+## Requests
 
-Once a client has been initialised, requests can be made to the API. The endpoints
-currently implemented by the gem are:
-
-| Endpoint | Client Method | Description |
-| -------- | ------------- | ----------- |
-| `GET /company/:id` | `client.company(id)` | Retrieves company details given a company number. |
-| `GET /company/:id/officers` | `client.officers(id)` | Retrieves a list of company officers given the company number. |
-
-Response data is given as a hash object directly obtained from the response JSON. Details
-of the available fields in the response are in the Companies House
+Once a client has been initialised, requests can be made to the API.
+Details of the available fields in the response are in the Companies House
 [documentation](https://developer.companieshouse.gov.uk/api/docs/index.html).
+The endpoints currently implemented by the gem are:
 
-### Error Handling
+| Client Method               | Endpoint                                | Description |
+| --------------------------- | --------------------------------------- | ----------- |
+| `.company(company_number)`  | `GET /company/:company_number`          | Retrieves a company profile. |
+| `.officers(company_number)` | `GET /company/:company_number/officers` | Retrieves a list of company officers. |
 
-If a request to the API returns with a status code other than `200 OK`, no response data
-will be returned to the caller. Instead, an exception of type `CompaniesHouse::APIError`
-will be raised.
+### .company
+This method implements the [readCompanyProfile](https://developer.companieshouse.gov.uk/api/docs/company/company_number/readCompanyProfile.html)
+API and returns the full [companyProfile](https://developer.companieshouse.gov.uk/api/docs/company/company_number/companyProfile-resource.html)
+resource.
 
-The subclass of `CompaniesHouse::APIError` that is raised will give more information about
-the error where possible. If none of these error types are appropriate, an instance of
-`CompaniesHouse::APIError` will be raised instead.
+### .officers
+This method implements the [officersList](https://developer.companieshouse.gov.uk/api/docs/company/company_number/officers/officerList.html)
+API. It will make one or more requests against this API, as necessary, to obtain
+the full list of company officers. It returns only the values under the `items`
+key from the
+[officerList](https://developer.companieshouse.gov.uk/api/docs/company/company_number/officers/officerList-resource.html)
+resource(s) which it reads.
 
-| Error Type | Description |
-| ----- | ----------- |
-| `NotFoundError` | The company number given does not correspond to a company. |
-| `RateLimitError` | The API rate limit has been reached for the current time window. |
-| `AuthenticationError` | The API key given is invalid. |
+### Other API Methods
+While there are other resources exposed by the
+[Companies House API](https://developer.companieshouse.gov.uk/api/docs/index.html),
+this gem does not implement access to these resources at this time.
 
-If an error has been raised due to an HTTP response code (i.e. any that is not `200 OK`),
-error objects will have the fields `response` and `status` available. They will be `nil`
-if no HTTP response was received.
+## Error Handling
+If a request to the Companies House API encounters an HTTP status other than
+`200 OK`, it will raise an instance of `CompaniesHouse::APIError` instead of
+returning response data. The error will have the following fields:
+
+| Field      | Description |
+| ---------- | ----------- |
+| `response` | The Net::HTTP response object from the failed API call. |
+| `status`   | A string containing the response status code. |
+
+
+Certain API responses will raise an instance of a more specific subclass of
+`CompaniesHouse::APIError`:
+
+| Status | Error                                 | Description |
+| ------ | ------------------------------------- | ----------- |
+| 401    | `CompaniesHouse::AuthenticationError` | Authentication error (invalid API key) |
+| 404    | `CompaniesHouse::NotFoundError`       | Not Found. (No record of the company is available.) |
+| 429    | `CompaniesHouse::RateLimitError`      | Application is being [rate limited](https://developer.companieshouse.gov.uk/api/docs/index/gettingStarted/rateLimiting.html) |
+
+The client will not catch any other errors which may occur, such as
+errors involving  network connections (e.g. `Errno::ECONNRESET`).
 
 ## Development
 
 This gem is configured for development using a `bundler` workflow.
 Tests are written using RSpec, and Rubocop is used to provide linting.
+Bug reports and pull requests are welcome on this project's
+[GitHub repository](https://github.com/gocardless/companies-house-ruby).
+
+To get started:
+
+``` shell
+bundle install --path vendor
+```
+
 
 To run all tests and Rubocop:
 
 ```shell
 bundle exec rake
 ```
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/gocardless/companies-house-ruby.

@@ -6,21 +6,15 @@ require 'companies_house/version'
 Gem::Specification.new do |spec|
   spec.name          = "companies-house"
   spec.version       = CompaniesHouse::VERSION
-  spec.authors       = ["Bruce Collie"]
-  spec.email         = ["bruce@gocardless.com"]
+  spec.authors       = ["GoCardless Engineering"]
+  spec.email         = ["developers@gocardless.com"]
+  spec.license       = "MIT"
 
-  spec.summary       = %q{Client for the Companies House REST API.}
+  spec.summary       = %q{Look up UK company registration information}
+  spec.description   = %q{Client for the Companies House REST API. Provides company profiles and officer lists.}
   spec.homepage      = "https://github.com/gocardless/companies-house-ruby"
 
-  # Prevent pushing this gem to RubyGems.org by setting 'allowed_push_host', or
-  # delete this section to allow pushing this gem to any host.
-  if spec.respond_to?(:metadata)
-    spec.metadata['allowed_push_host'] = "TODO: Set to 'http://mygemserver.com'"
-  else
-    raise "RubyGems 2.0 or newer is required to protect against public gem pushes."
-  end
-
-  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
+  spec.files         = `git ls-files -z lib/ companies-house.gemspec LICENSE README.md`.split("\x0")
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
@@ -28,7 +22,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler", "~> 1.10"
   spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "rspec"
+  spec.add_development_dependency "rspec", "~> 3.5.0"
   spec.add_development_dependency "rubocop", "~> 0.41.2"
   spec.add_development_dependency "webmock", "~> 2.1.0"
 end
