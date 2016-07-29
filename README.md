@@ -11,7 +11,6 @@ see the gem [companies-house-gateway](https://github.com/gocardless/companies-ho
 (Monthly subscription [fees](http://xmlgw.companieshouse.gov.uk/CHDpriceList.shtml), and other fees, may apply.)
 
 Quick start:
-
 * Register an account via the `Sign In / Register` link
 [on the CompaniesHouse Developers website](https://developer.companieshouse.gov.uk/api/docs/)
 * Register an API key at [Your Applications](https://developer.companieshouse.gov.uk/developer/applications)
@@ -21,7 +20,7 @@ Quick start:
 export COMPANIES_HOUSE_API_KEY=YOUR_API_KEY_HERE
 
 ```
-
+* Install `companies-house-rest` through [RubyGems](https://rubygems.org/gems/companies-house-rest)
 * Create and use a client:
 
 ``` ruby
