@@ -1,5 +1,7 @@
 # CompaniesHouse::Client
 
+[![CircleCI](https://circleci.com/gh/gocardless/companies-house-rest.svg?style=svg)](https://circleci.com/gh/gocardless/companies-house-rest)
+
 This Gem implements an API client for the Companies House REST API. It can be
 used to look up information about companies registered in the United Kingdom.
 As of July 2016, this API is described by Companies House as a "beta service."
@@ -130,7 +132,7 @@ errors involving  network connections (e.g. `Errno::ECONNRESET`).
 This gem is configured for development using a `bundler` workflow.
 Tests are written using RSpec, and Rubocop is used to provide linting.
 Bug reports and pull requests are welcome on this project's
-[GitHub repository](https://github.com/gocardless/companies-house-ruby).
+[GitHub repository](https://github.com/gocardless/companies-house-rest).
 
 To get started:
 
