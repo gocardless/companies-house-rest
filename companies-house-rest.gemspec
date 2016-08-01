@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %q{Look up UK company registration information}
   spec.description   = %q{Client for the Companies House REST API. Provides company profiles and officer lists.}
-  spec.homepage      = "https://github.com/gocardless/companies-house-ruby"
+  spec.homepage      = "https://github.com/gocardless/companies-house-rest"
 
   spec.files         = `git ls-files -z lib/ *.gemspec LICENSE README.md`.split("\x0")
   spec.bindir        = "exe"
