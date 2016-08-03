@@ -38,8 +38,9 @@ module CompaniesHouse
 
       loop do
         page = request(id, '/officers', start_index: offset)
-        total = page['total_results']
         new_items = page['items']
+        total = page['total_results'] || new_items.count
+
         items += new_items
         offset += new_items.count
 
