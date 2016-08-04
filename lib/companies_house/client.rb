@@ -3,6 +3,8 @@ require 'companies_house/api_error'
 require 'companies_house/not_found_error'
 require 'companies_house/authentication_error'
 require 'companies_house/rate_limit_error'
+
+require 'active_support/notifications'
 require 'net/http'
 require 'json'
 
@@ -26,7 +28,7 @@ module CompaniesHouse
     end
 
     def company(id)
-      request(id)
+      request(:company, id)
     end
 
     # The API endpoint for company officers is paginated, and not all of the officers may
@@ -37,7 +39,7 @@ module CompaniesHouse
       offset = 0
 
       loop do
-        page = request(id, '/officers', start_index: offset)
+        page = request(:officers, id, '/officers', start_index: offset)
         new_items = page['items']
         total = page['total_results'] || new_items.count
 
@@ -56,17 +58,41 @@ module CompaniesHouse
       end
     end
 
+    def publish(*args)
+      ActiveSupport::Notifications.publish(*args)
+    end
+
     private
 
-    def request(company_id, extra_path = '', params = {})
-      uri = URI.join(endpoint, 'company/', "#{company_id}#{extra_path}")
+    # rubocop:disable Metrics/AbcSize
+    def request(verb, company_id, extra_path = '', params = {})
+      started = Time.now.utc
+
+      rest_path = "company/#{company_id}#{extra_path}"
+      uri = URI.join(endpoint, rest_path)
       uri.query = URI.encode_www_form(params)
 
       req = Net::HTTP::Get.new(uri)
       req.basic_auth api_key, ''
 
+      notification_payload = {
+        method: :get,
+        path: rest_path,
+        query: params
+      }
       response = connection.request req
-      parse(response, company_id)
+      notification_payload[:status] = response.code
+
+      begin
+        response_body = parse(response, company_id)
+        notification_payload[:response] = response_body
+      rescue => e
+        notification_payload[:error] = e
+        raise e
+      ensure
+        publish("companies_house.get.#{verb}", started, Time.now.utc,
+                SecureRandom.hex(10), notification_payload)
+      end
     end
 
     def parse(response, company_id)

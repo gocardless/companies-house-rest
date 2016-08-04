@@ -30,6 +30,9 @@ describe CompaniesHouse::Client do
         expect(request).to eq(%w(item1 item2))
       end
 
+      it_behaves_like "sends one happy notification" do
+        let(:rest_query) { { start_index: 0 } }
+      end
     end
 
     context 'when results are spread across several pages' do
@@ -62,6 +65,32 @@ describe CompaniesHouse::Client do
 
       it 'should return items from all pages' do
         expect(request).to eq(%w(item1 item2))
+      end
+
+      it 'should send two notifications' do
+        expect(notifications_of do
+                 request
+               end).to match(
+                 [have_attributes(
+                   name: "companies_house.get.officers",
+                   payload: {
+                     method: :get,
+                     path: rest_path,
+                     query: { start_index: 0 },
+                     response: JSON[page1],
+                     status: status.to_s
+                   }
+                 ), have_attributes(
+                   name: "companies_house.get.officers",
+                   payload: {
+                     method: :get,
+                     path: rest_path,
+                     query: { start_index: 1 },
+                     response: JSON[page2],
+                     status: status.to_s
+                   }
+                 )]
+               )
       end
     end
 

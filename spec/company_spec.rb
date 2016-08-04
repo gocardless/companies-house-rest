@@ -22,6 +22,8 @@ describe CompaniesHouse::Client do
       it 'should return a parsed JSON representation' do
         expect(request).to eq('company' => 'data')
       end
+
+      it_behaves_like "sends one happy notification"
     end
 
     context 'when the API returns an error' do
