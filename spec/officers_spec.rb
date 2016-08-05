@@ -8,7 +8,7 @@ describe CompaniesHouse::Client do
   describe '#officers' do
     subject(:request) { client.officers(company_id) }
     let(:rest_path) { "company/#{company_id}/officers" }
-    let(:request_verb) { 'officers' }
+    let(:request_method) { 'officers' }
 
     context 'when all results are on a single page' do
       let(:single_page) do

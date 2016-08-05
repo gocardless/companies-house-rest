@@ -1,16 +1,11 @@
 # frozen_string_literal: true
-require 'companies_house/api_error'
-require 'companies_house/not_found_error'
-require 'companies_house/authentication_error'
-require 'companies_house/rate_limit_error'
-
-require 'active_support/notifications'
+require 'companies_house/request'
 require 'net/http'
-require 'json'
 
 module CompaniesHouse
-  # This class connects to the Companies House API
+  # This class provides an interface to the Companies House API
   # at https://api.companieshouse.gov.uk
+  # Specifically, it manages the connections and arranges requests.
   class Client
     ENDPOINT = 'https://api.companieshouse.gov.uk'
 
@@ -58,56 +53,20 @@ module CompaniesHouse
       end
     end
 
-    def publish(*args)
-      ActiveSupport::Notifications.publish(*args)
-    end
-
     private
 
-    # rubocop:disable Metrics/AbcSize
-    def request(verb, company_id, extra_path = '', params = {})
-      started = Time.now.utc
+    def request(resource, company_id, extra_path = '', params = {})
+      Request.new(
+        connection: connection,
+        api_key: @api_key,
+        endpoint: @endpoint,
 
-      rest_path = "company/#{company_id}#{extra_path}"
-      uri = URI.join(endpoint, rest_path)
-      uri.query = URI.encode_www_form(params)
+        path: "company/#{company_id}#{extra_path}",
+        query: params,
 
-      req = Net::HTTP::Get.new(uri)
-      req.basic_auth api_key, ''
-
-      notification_payload = {
-        method: :get,
-        path: rest_path,
-        query: params
-      }
-      response = connection.request req
-      notification_payload[:status] = response.code
-
-      begin
-        response_body = parse(response, company_id)
-        notification_payload[:response] = response_body
-      rescue => e
-        notification_payload[:error] = e
-        raise e
-      ensure
-        publish("companies_house.get.#{verb}", started, Time.now.utc,
-                SecureRandom.hex(10), notification_payload)
-      end
-    end
-
-    def parse(response, company_id)
-      case response.code
-      when '200'
-        return JSON[response.body]
-      when '401'
-        raise CompaniesHouse::AuthenticationError, response
-      when '404'
-        raise CompaniesHouse::NotFoundError.new(company_id, response)
-      when '429'
-        raise CompaniesHouse::RateLimitError, response
-      else
-        raise CompaniesHouse::APIError.new("Unknown API response", response)
-      end
+        resource_type: resource,
+        company_id: company_id
+      ).execute
     end
   end
 end
