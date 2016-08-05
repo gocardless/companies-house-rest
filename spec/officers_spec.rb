@@ -72,7 +72,7 @@ describe CompaniesHouse::Client do
                  request
                end).to match(
                  [have_attributes(
-                   name: "companies_house.get.officers",
+                   name: "companies_house.officers",
                    payload: {
                      method: :get,
                      path: rest_path,
@@ -81,7 +81,7 @@ describe CompaniesHouse::Client do
                      status: status.to_s
                    }
                  ), have_attributes(
-                   name: "companies_house.get.officers",
+                   name: "companies_house.officers",
                    payload: {
                      method: :get,
                      path: rest_path,

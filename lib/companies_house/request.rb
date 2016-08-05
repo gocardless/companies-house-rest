@@ -67,7 +67,7 @@ module CompaniesHouse
 
     def publish_notification
       ActiveSupport::Notifications.publish(
-        "companies_house.get.#{resource_type}",
+        "companies_house.#{resource_type}",
         @started, Time.now.utc,
         SecureRandom.hex(10), @notification_payload
       )

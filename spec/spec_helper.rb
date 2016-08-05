@@ -103,7 +103,7 @@ shared_examples 'sends one notification' do
     end
 
     expected_event = have_attributes(
-      name: "companies_house.get.#{request_method}",
+      name: "companies_house.#{request_method}",
       time: time,
       end: time,
       payload: expected_payload
