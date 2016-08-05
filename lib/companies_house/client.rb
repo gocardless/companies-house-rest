@@ -32,9 +32,10 @@ module CompaniesHouse
     def officers(id)
       items = []
       offset = 0
+      xid = make_transaction_id
 
       loop do
-        page = request(:officers, id, '/officers', start_index: offset)
+        page = request(:officers, id, '/officers', { start_index: offset }, xid)
         new_items = page['items']
         total = page['total_results'] || new_items.count
 
@@ -55,7 +56,15 @@ module CompaniesHouse
 
     private
 
-    def request(resource, company_id, extra_path = '', params = {})
+    def make_transaction_id
+      SecureRandom.hex(10)
+    end
+
+    def request(resource,
+                company_id,
+                extra_path = '',
+                params = {},
+                transaction_id = make_transaction_id)
       Request.new(
         connection: connection,
         api_key: @api_key,
@@ -65,7 +74,8 @@ module CompaniesHouse
         query: params,
 
         resource_type: resource,
-        company_id: company_id
+        company_id: company_id,
+        transaction_id: transaction_id
       ).execute
     end
   end

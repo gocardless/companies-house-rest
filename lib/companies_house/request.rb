@@ -29,6 +29,8 @@ module CompaniesHouse
     attribute :resource_type, Symbol, required: true
     attribute :company_id, String, required: true
 
+    attribute :transaction_id, String, required: true
+
     def initialize(args)
       super(args)
 
@@ -69,7 +71,8 @@ module CompaniesHouse
       ActiveSupport::Notifications.publish(
         "companies_house.#{resource_type}",
         @started, Time.now.utc,
-        SecureRandom.hex(10), @notification_payload
+        transaction_id,
+        @notification_payload
       )
     end
 

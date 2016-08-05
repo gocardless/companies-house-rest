@@ -68,29 +68,32 @@ describe CompaniesHouse::Client do
       end
 
       it 'should send two notifications' do
-        expect(notifications_of do
-                 request
-               end).to match(
-                 [have_attributes(
-                   name: "companies_house.officers",
-                   payload: {
-                     method: :get,
-                     path: rest_path,
-                     query: { start_index: 0 },
-                     response: JSON[page1],
-                     status: status.to_s
-                   }
-                 ), have_attributes(
-                   name: "companies_house.officers",
-                   payload: {
-                     method: :get,
-                     path: rest_path,
-                     query: { start_index: 1 },
-                     response: JSON[page2],
-                     status: status.to_s
-                   }
-                 )]
-               )
+        notifications = notifications_of do
+          request
+        end
+
+        expect(notifications).to match(
+          [have_attributes(
+            name: "companies_house.officers",
+            payload: {
+              method: :get,
+              path: rest_path,
+              query: { start_index: 0 },
+              response: JSON[page1],
+              status: status.to_s
+            }
+          ), have_attributes(
+            name: "companies_house.officers",
+            payload: {
+              method: :get,
+              path: rest_path,
+              query: { start_index: 1 },
+              response: JSON[page2],
+              status: status.to_s
+            }
+          )]
+        )
+        expect(notifications[0].transaction_id).to eq(notifications[1].transaction_id)
       end
     end
 

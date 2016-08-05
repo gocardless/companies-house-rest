@@ -81,6 +81,12 @@ shared_examples 'sends one notification' do
   let(:time) { Time.now.utc }
 
   it 'records to ActiveSupport' do
+    i = 0
+    allow(SecureRandom).to receive(:hex).with(10) do
+      i += 1
+      sprintf("RANDOM%04d", i)
+    end
+
     recorded_notifications = notifications_of do
       Timecop.freeze(time) do
         begin
@@ -90,6 +96,7 @@ shared_examples 'sends one notification' do
         end
       end
     end
+
     expected_payload = {
       method: :get,
       path: rest_path,
@@ -106,7 +113,8 @@ shared_examples 'sends one notification' do
       name: "companies_house.#{request_method}",
       time: time,
       end: time,
-      payload: expected_payload
+      payload: expected_payload,
+      transaction_id: "RANDOM0001"
     )
     expect(recorded_notifications).to match([expected_event])
   end
