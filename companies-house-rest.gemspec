@@ -21,12 +21,12 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = '~> 2.2.2'
 
   spec.add_runtime_dependency "activesupport", ">= 4.2"
-  spec.add_runtime_dependency "virtus", "~> 1.0.5"
+  spec.add_runtime_dependency "virtus", '~> 1.0', '>= 1.0.5'
 
   spec.add_development_dependency "bundler", "~> 1.10"
   spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "rspec", "~> 3.5.0"
+  spec.add_development_dependency "rspec", "~> 3.5"
   spec.add_development_dependency "rubocop", "~> 0.41.2"
-  spec.add_development_dependency "webmock", "~> 2.1.0"
+  spec.add_development_dependency "webmock", "~> 2.1"
   spec.add_development_dependency 'timecop', '~> 0.8'
 end
