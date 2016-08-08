@@ -1,14 +1,11 @@
 # frozen_string_literal: true
-require 'companies_house/api_error'
-require 'companies_house/not_found_error'
-require 'companies_house/authentication_error'
-require 'companies_house/rate_limit_error'
+require 'companies_house/request'
 require 'net/http'
-require 'json'
 
 module CompaniesHouse
-  # This class connects to the Companies House API
+  # This class provides an interface to the Companies House API
   # at https://api.companieshouse.gov.uk
+  # Specifically, it manages the connections and arranges requests.
   class Client
     ENDPOINT = 'https://api.companieshouse.gov.uk'
 
@@ -26,7 +23,7 @@ module CompaniesHouse
     end
 
     def company(id)
-      request(id)
+      request(:company, id)
     end
 
     # The API endpoint for company officers is paginated, and not all of the officers may
@@ -35,9 +32,10 @@ module CompaniesHouse
     def officers(id)
       items = []
       offset = 0
+      xid = make_transaction_id
 
       loop do
-        page = request(id, '/officers', start_index: offset)
+        page = request(:officers, id, '/officers', { start_index: offset }, xid)
         new_items = page['items']
         total = page['total_results'] || new_items.count
 
@@ -58,30 +56,27 @@ module CompaniesHouse
 
     private
 
-    def request(company_id, extra_path = '', params = {})
-      uri = URI.join(endpoint, 'company/', "#{company_id}#{extra_path}")
-      uri.query = URI.encode_www_form(params)
-
-      req = Net::HTTP::Get.new(uri)
-      req.basic_auth api_key, ''
-
-      response = connection.request req
-      parse(response, company_id)
+    def make_transaction_id
+      SecureRandom.hex(10)
     end
 
-    def parse(response, company_id)
-      case response.code
-      when '200'
-        return JSON[response.body]
-      when '401'
-        raise CompaniesHouse::AuthenticationError, response
-      when '404'
-        raise CompaniesHouse::NotFoundError.new(company_id, response)
-      when '429'
-        raise CompaniesHouse::RateLimitError, response
-      else
-        raise CompaniesHouse::APIError.new("Unknown API response", response)
-      end
+    def request(resource,
+                company_id,
+                extra_path = '',
+                params = {},
+                transaction_id = make_transaction_id)
+      Request.new(
+        connection: connection,
+        api_key: @api_key,
+        endpoint: @endpoint,
+
+        path: "company/#{company_id}#{extra_path}",
+        query: params,
+
+        resource_type: resource,
+        company_id: company_id,
+        transaction_id: transaction_id
+      ).execute
     end
   end
 end

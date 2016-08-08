@@ -27,7 +27,7 @@ Lint/UnneededDisable:
 # Avoid methods longer than 30 lines of code
 Metrics/MethodLength:
   CountComments: false  # count full line comments?
-  Max: 87
+  Max: 30
 
 Style/StringLiterals:
   Enabled: false
