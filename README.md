@@ -99,6 +99,9 @@ key from the
 [officerList](https://developer.companieshouse.gov.uk/api/docs/company/company_number/officers/officerList-resource.html)
 resource(s) which it reads.
 
+### .pscs
+This method implements the [list] method(https://developer.companieshouse.gov.uk/api/docs/company/company_number/persons-with-significant-control/persons-with-significant-control.html). It will one or more request againsts this API, as necessary, to obtain the full list of company persons of significant control. It returns only the values under the `items` key from the resource(s) which it reads. 
+
 ### Other API Methods
 While there are other resources exposed by the
 [Companies House API](https://developer.companieshouse.gov.uk/api/docs/index.html),
