@@ -85,7 +85,7 @@ The endpoints currently implemented by the gem are:
 | --------------------------- | --------------------------------------- | ----------- |
 | `.company(company_number)`  | `GET /company/:company_number`          | Retrieves a company profile. |
 | `.officers(company_number)` | `GET /company/:company_number/officers` | Retrieves a list of company officers. |
-| `.pscs(company_number)` |   | `GET /company/:company_number/persons-of-significant-control`          | | Retrieves a list of company persons of significant control. |
+| `.pscs(company_number)` | `GET /company/:company_number/persons-with-significant-control` | Retrieves a list of company persons of significant control. |
 
 ### .company
 This method implements the [readCompanyProfile](https://developer.companieshouse.gov.uk/api/docs/company/company_number/readCompanyProfile.html)
@@ -101,7 +101,7 @@ key from the
 resource(s) which it reads.
 
 ### .pscs
-This method implements the [list] method(https://developer.companieshouse.gov.uk/api/docs/company/company_number/persons-with-significant-control/persons-with-significant-control.html). It will one or more request againsts this API, as necessary, to obtain the full list of company persons of significant control. It returns only the values under the `items` key from the resource(s) which it reads. 
+This method implements the [list] method(https://developer.companieshouse.gov.uk/api/docs/company/company_number/persons-with-significant-control/persons-with-significant-control.html). It will make one or more request againsts this API, as necessary, to obtain the full list of company persons of significant control. It returns only the values under the `items` key from the resource(s) which it reads. 
 
 ### Other API Methods
 While there are other resources exposed by the
