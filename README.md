@@ -85,6 +85,7 @@ The endpoints currently implemented by the gem are:
 | --------------------------- | --------------------------------------- | ----------- |
 | `.company(company_number)`  | `GET /company/:company_number`          | Retrieves a company profile. |
 | `.officers(company_number)` | `GET /company/:company_number/officers` | Retrieves a list of company officers. |
+| `.pscs(company_number)` |   | `GET /company/:company_number/persons-of-significant-control`          | | Retrieves a list of company persons of significant control. |
 
 ### .company
 This method implements the [readCompanyProfile](https://developer.companieshouse.gov.uk/api/docs/company/company_number/readCompanyProfile.html)
