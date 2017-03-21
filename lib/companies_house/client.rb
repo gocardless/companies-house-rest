@@ -48,6 +48,28 @@ module CompaniesHouse
       items
     end
 
+    # The API endpoint for persons of significant control is paginated,
+    # We deal with this by collating all the pages of results into one
+    # result set before returning them.
+    def pscs(id)
+      items = []
+      offset = 0
+      xid = make_transaction_id
+
+      loop do
+        page = request(:pscs, id, '/persons-with-significant-control', { start_index: offset }, xid)
+        new_items = page['items']
+        total = page['total_results'] || new_items.count
+
+        items += new_items
+        offset += new_items.count
+
+        break if items.count >= total
+      end
+
+      items
+    end
+
     def connection
       @connection ||= Net::HTTP.new(endpoint.host, endpoint.port).tap do |conn|
         conn.use_ssl = true
