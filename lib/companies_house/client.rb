@@ -44,6 +44,10 @@ module CompaniesHouse
       return gather_items(:charges, id, '/charges')
     end
 
+    def filing_history(id)
+      return gather_items(:filing_history, id, '/filing-history')
+    end
+
     # This method can be used for gathering items from all
     # pages of a paginated API query
     def gather_items(resource, id, extra_path)
