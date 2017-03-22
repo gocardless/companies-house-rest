@@ -83,7 +83,7 @@ module CompaniesHouse
       when '401'
         raise CompaniesHouse::AuthenticationError, response
       when '404'
-        raise CompaniesHouse::NotFoundError.new(company_id, response)
+        raise CompaniesHouse::NotFoundError.new(resource_type, company_id, response)
       when '429'
         raise CompaniesHouse::RateLimitError, response
       else
