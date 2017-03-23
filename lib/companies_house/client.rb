@@ -30,45 +30,41 @@ module CompaniesHouse
     # be returned in the first request. We deal with this by collating all the pages of
     # results into one result set before returning them.
     def officers(id)
-      items = []
-      offset = 0
-      xid = make_transaction_id
-
-      loop do
-        page = request(:officers, id, '/officers', { start_index: offset }, xid)
-        new_items = page['items']
-        total = page['total_results'] || new_items.count
-
-        items += new_items
-        offset += new_items.count
-
-        break if items.count >= total
-      end
-
-      items
+      return gather_items(:officers, id, '/officers')
     end
 
     # The API endpoint for persons of significant control is paginated,
     # We deal with this by collating all the pages of results into one
     # result set before returning them.
     def pscs(id)
+      return gather_items(:pscs, id, '/persons-with-significant-control')
+    end
+
+    def charges(id)
+      return gather_items(:charges, id, '/charges')
+    end
+
+    def filing_history(id)
+      return gather_items(:filing_history, id, '/filing-history')
+    end
+
+    # This method can be used for gathering items from all
+    # pages of a paginated API query
+    def gather_items(resource, id, extra_path)
       items = []
-      offset = 0
       xid = make_transaction_id
 
       loop do
-        page = request(:pscs, id, '/persons-with-significant-control', { start_index: offset }, xid)
+        page = request(resource, id, extra_path, { start_index: items.count }, xid)
         new_items = page['items']
         total = page['total_results'] || new_items.count
 
         items += new_items
-        offset += new_items.count
-
         break if items.count >= total
       end
-
-      items
-    end
+      
+      return items
+    end 
 
     def connection
       @connection ||= Net::HTTP.new(endpoint.host, endpoint.port).tap do |conn|
