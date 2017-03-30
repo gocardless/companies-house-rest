@@ -86,6 +86,7 @@ The endpoints currently implemented by the gem are:
 | `.company(company_number)`  | `GET /company/:company_number`          | Retrieves a company profile. |
 | `.officers(company_number)` | `GET /company/:company_number/officers` | Retrieves a list of company officers. |
 | `.pscs(company_number)` | `GET /company/:company_number/persons-with-significant-control` | Retrieves a list of company persons of significant control. |
+| `.filing_history` | `GET /company/:company_number/filing_history` | Retrieves a list of filing history. |
 
 ### .company
 This method implements the [readCompanyProfile](https://developer.companieshouse.gov.uk/api/docs/company/company_number/readCompanyProfile.html)
@@ -102,6 +103,9 @@ resource(s) which it reads.
 
 ### .pscs
 This method implements the [list] method(https://developer.companieshouse.gov.uk/api/docs/company/company_number/persons-with-significant-control/persons-with-significant-control.html). It will make one or more request againsts this API, as necessary, to obtain the full list of company persons of significant control. It returns only the values under the `items` key from the resource(s) which it reads. 
+
+### .filing_history
+This method implements the catching of filing history.
 
 ### Other API Methods
 While there are other resources exposed by the
