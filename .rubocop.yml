@@ -91,3 +91,8 @@ Rails/UniqBeforePluck:
 Metrics/BlockLength:
   Exclude:
     - spec/**/*
+
+Style/FileName:
+  Exclude:
+    - Gemfile
+    - companies-house-rest.gemspec
