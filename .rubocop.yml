@@ -87,3 +87,7 @@ Rails:
 
 Rails/UniqBeforePluck:
   Enabled: false
+
+Metrics/BlockLength:
+  Exclude:
+    - spec/**/*
