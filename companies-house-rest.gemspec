@@ -13,7 +13,8 @@ Gem::Specification.new do |spec|
   spec.license       = "MIT"
 
   spec.summary       = 'Look up UK company registration information'
-  spec.description   = 'Client for the Companies House REST API. Provides company profiles and officer lists.'
+  spec.description   = 'Client for the Companies House REST API. Provides company ' \
+                       'profiles and officer lists.'
   spec.homepage      = "https://github.com/gocardless/companies-house-rest"
 
   spec.files         = `git ls-files -z lib/ *.gemspec LICENSE README.md`.split("\x0")
