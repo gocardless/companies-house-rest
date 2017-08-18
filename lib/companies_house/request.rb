@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'companies_house/api_error'
 require 'companies_house/not_found_error'
 require 'companies_house/authentication_error'
@@ -79,7 +80,7 @@ module CompaniesHouse
     def parse(response, company_id)
       case response.code
       when '200'
-        return JSON[response.body]
+        JSON[response.body]
       when '401'
         raise CompaniesHouse::AuthenticationError, response
       when '404'
