@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 
 describe CompaniesHouse::Client do
@@ -16,7 +17,7 @@ describe CompaniesHouse::Client do
           items_per_page: 2,
           total_results: 2,
           start_index: 0,
-          items: %w(item1 item2)
+          items: %w[item1 item2]
         }.to_json
       end
 
@@ -27,7 +28,7 @@ describe CompaniesHouse::Client do
       end
 
       it 'should return items from the one, single page' do
-        expect(request).to eq(%w(item1 item2))
+        expect(request).to eq(%w[item1 item2])
       end
 
       it_behaves_like "sends one happy notification" do
@@ -64,7 +65,7 @@ describe CompaniesHouse::Client do
       end
 
       it 'should return items from all pages' do
-        expect(request).to eq(%w(item1 item2))
+        expect(request).to eq(%w[item1 item2])
       end
 
       it 'should send two notifications' do

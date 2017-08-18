@@ -1,4 +1,6 @@
 # coding: utf-8
+# frozen_string_literal: true
+
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'companies_house/version'
@@ -10,8 +12,8 @@ Gem::Specification.new do |spec|
   spec.email         = ["developers@gocardless.com"]
   spec.license       = "MIT"
 
-  spec.summary       = %q{Look up UK company registration information}
-  spec.description   = %q{Client for the Companies House REST API. Provides company profiles and officer lists.}
+  spec.summary       = 'Look up UK company registration information'
+  spec.description   = 'Client for the Companies House REST API. Provides company profiles and officer lists.'
   spec.homepage      = "https://github.com/gocardless/companies-house-rest"
 
   spec.files         = `git ls-files -z lib/ *.gemspec LICENSE README.md`.split("\x0")
