@@ -53,7 +53,7 @@ Style/SignalException:
   EnforcedStyle: 'only_raise'
 
 # Use trailing rather than leading dots on multi-line call chains
-Style/DotPosition:
+Layout/DotPosition:
   EnforcedStyle: trailing
 
 # Allow non-ASCII characters (e.g. £) in comments
@@ -64,10 +64,10 @@ Style/Alias:
   Enabled: true
   EnforcedStyle: prefer_alias_method
 
-Style/IndentArray:
+Layout/IndentArray:
   EnforcedStyle: consistent
 
-Style/IndentHash:
+Layout/IndentHash:
   EnforcedStyle: consistent
 
 Style/FormatString:
@@ -76,10 +76,10 @@ Style/FormatString:
 Style/Lambda:
   EnforcedStyle: literal
 
-Style/MultilineMethodCallIndentation:
+Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
 
-Style/MultilineOperationIndentation:
+Layout/MultilineOperationIndentation:
   EnforcedStyle: indented
 
 Rails:
