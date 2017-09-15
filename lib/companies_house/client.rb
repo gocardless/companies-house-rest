@@ -20,7 +20,7 @@ module CompaniesHouse
     end
 
     def end_connection
-      @connection.finish if @connection && @connection.started?
+      @connection.finish if @connection&.started?
     end
 
     def company(id)
