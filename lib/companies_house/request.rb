@@ -56,8 +56,7 @@ module CompaniesHouse
 
       begin
         response_body = @notification_payload[:response] = parse(response, company_id)
-      # rubocop:disable Lint/RescueWithoutErrorClass
-      rescue => e
+      rescue StandardError => e
         @notification_payload[:error] = e
         raise e
       ensure

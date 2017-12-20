@@ -5,7 +5,7 @@ require 'net/http'
 
 module CompaniesHouse
   # This class provides an interface to the Companies House API
-  # at https://api.companieshouse.gov.uk
+  # at https://api.companieshouse.gov.uk.
   # Specifically, it manages the connections and arranges requests.
   class Client
     ENDPOINT = 'https://api.companieshouse.gov.uk'
@@ -70,10 +70,8 @@ module CompaniesHouse
         connection: connection,
         api_key: @api_key,
         endpoint: @endpoint,
-
         path: "company/#{company_id}#{extra_path}",
         query: params,
-
         resource_type: resource,
         company_id: company_id,
         transaction_id: transaction_id

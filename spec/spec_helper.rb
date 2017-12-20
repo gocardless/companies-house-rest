@@ -92,8 +92,7 @@ shared_examples 'sends one notification' do
       Timecop.freeze(time) do
         begin
           request
-        # rubocop:disable Lint/RescueWithoutErrorClass
-        rescue
+        rescue StandardError
           ""
         end
       end
