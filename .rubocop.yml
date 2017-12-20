@@ -92,7 +92,7 @@ Metrics/BlockLength:
   Exclude:
     - spec/**/*
 
-Style/FileName:
+Naming/FileName:
   Exclude:
     - Gemfile
     - companies-house-rest.gemspec
