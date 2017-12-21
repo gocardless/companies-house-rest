@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'webmock/rspec'
-$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
-require 'companies_house/client'
-require 'timecop'
+require "webmock/rspec"
+$LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
+require "companies_house/client"
+require "timecop"
 
 def notifications_of
   notifications = []
@@ -16,21 +16,21 @@ def notifications_of
   notifications
 end
 
-shared_context 'test credentials' do
-  let(:api_key) { 'el-psy-congroo' }
-  let(:example_endpoint) { URI('https://api.example.com:8000') }
-  let(:company_id) { '07495895' }
+shared_context "test credentials" do
+  let(:api_key) { "el-psy-congroo" }
+  let(:example_endpoint) { URI("https://api.example.com:8000") }
+  let(:company_id) { "07495895" }
 end
 
-shared_context 'test client' do
-  include_context 'test credentials'
+shared_context "test client" do
+  include_context "test credentials"
 
   let(:client) { described_class.new(api_key: api_key, endpoint: example_endpoint) }
   let(:status) { 200 }
 end
 
-shared_examples 'an error response' do
-  it 'should raise a specific APIError' do
+shared_examples "an error response" do
+  it "should raise a specific APIError" do
     expect { request }.to raise_error do |error|
       expect(error).to be_a(error_class)
       expect(error.status).to eq(status.to_s)
@@ -39,49 +39,49 @@ shared_examples 'an error response' do
     end
   end
 
-  it_should_behave_like 'sends one notification'
+  it_should_behave_like "sends one notification"
 end
 
-shared_examples 'an API that handles all errors' do
-  context '404' do
+shared_examples "an API that handles all errors" do
+  context "404" do
     let(:status) { 404 }
     let(:message) { "Company #{company_id} not found - HTTP 404" }
     let(:error_class) { CompaniesHouse::NotFoundError }
-    it_should_behave_like 'an error response'
+    it_should_behave_like "an error response"
   end
 
-  context '429' do
+  context "429" do
     let(:status) { 429 }
     let(:message) { "Rate limit exceeded - HTTP 429" }
     let(:error_class) { CompaniesHouse::RateLimitError }
-    it_should_behave_like 'an error response'
+    it_should_behave_like "an error response"
   end
 
-  context '401' do
+  context "401" do
     let(:status) { 401 }
     let(:message) { "Invalid API key - HTTP 401" }
     let(:error_class) { CompaniesHouse::AuthenticationError }
-    it_should_behave_like 'an error response'
+    it_should_behave_like "an error response"
   end
 
-  context 'any other code' do
+  context "any other code" do
     let(:status) { 342 }
     let(:message) { "Unknown API response - HTTP 342" }
     let(:error_class) { CompaniesHouse::APIError }
-    it_should_behave_like 'an error response'
+    it_should_behave_like "an error response"
   end
 end
 
-shared_examples 'sends one happy notification' do
-  it_should_behave_like 'sends one notification' do
+shared_examples "sends one happy notification" do
+  it_should_behave_like "sends one notification" do
     let(:error_class) { nil }
   end
 end
 
-shared_examples 'sends one notification' do
+shared_examples "sends one notification" do
   let(:time) { Time.now.utc }
 
-  it 'records to ActiveSupport' do
+  it "records to ActiveSupport" do
     i = 0
     allow(SecureRandom).to receive(:hex).with(10) do
       i += 1
@@ -102,7 +102,7 @@ shared_examples 'sends one notification' do
       method: :get,
       path: rest_path,
       query: rest_query,
-      status: status.to_s
+      status: status.to_s,
     }
     if error_class
       expected_payload[:error] = be_a(error_class)
@@ -115,7 +115,7 @@ shared_examples 'sends one notification' do
       time: time,
       end: time,
       payload: expected_payload,
-      transaction_id: "RANDOM0001"
+      transaction_id: "RANDOM0001",
     )
     expect(recorded_notifications).to match([expected_event])
   end

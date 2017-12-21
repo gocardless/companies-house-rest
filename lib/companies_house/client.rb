@@ -1,22 +1,22 @@
 # frozen_string_literal: true
 
-require 'companies_house/request'
-require 'net/http'
+require "companies_house/request"
+require "net/http"
 
 module CompaniesHouse
   # This class provides an interface to the Companies House API
   # at https://api.companieshouse.gov.uk.
   # Specifically, it manages the connections and arranges requests.
   class Client
-    ENDPOINT = 'https://api.companieshouse.gov.uk'
+    ENDPOINT = "https://api.companieshouse.gov.uk"
 
     attr_reader :api_key, :endpoint
 
     def initialize(config)
-      raise ArgumentError, 'Missing API key' unless config[:api_key]
+      raise ArgumentError, "Missing API key" unless config[:api_key]
       @api_key = config[:api_key]
       @endpoint = URI(config[:endpoint] || ENDPOINT)
-      raise ArgumentError, 'HTTP is not supported' if @endpoint.scheme != 'https'
+      raise ArgumentError, "HTTP is not supported" if @endpoint.scheme != "https"
     end
 
     def end_connection
@@ -36,9 +36,9 @@ module CompaniesHouse
       xid = make_transaction_id
 
       loop do
-        page = request(:officers, id, '/officers', { start_index: offset }, xid)
-        new_items = page['items']
-        total = page['total_results'] || new_items.count
+        page = request(:officers, id, "/officers", { start_index: offset }, xid)
+        new_items = page["items"]
+        total = page["total_results"] || new_items.count
 
         items += new_items
         offset += new_items.count
@@ -63,7 +63,7 @@ module CompaniesHouse
 
     def request(resource,
                 company_id,
-                extra_path = '',
+                extra_path = "",
                 params = {},
                 transaction_id = make_transaction_id)
       Request.new(
@@ -74,7 +74,7 @@ module CompaniesHouse
         query: params,
         resource_type: resource,
         company_id: company_id,
-        transaction_id: transaction_id
+        transaction_id: transaction_id,
       ).execute
     end
   end

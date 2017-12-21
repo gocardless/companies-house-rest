@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-require 'companies_house/api_error'
-require 'companies_house/not_found_error'
-require 'companies_house/authentication_error'
-require 'companies_house/rate_limit_error'
+require "companies_house/api_error"
+require "companies_house/not_found_error"
+require "companies_house/authentication_error"
+require "companies_house/rate_limit_error"
 
-require 'virtus'
-require 'uri'
-require 'json'
+require "virtus"
+require "uri"
+require "json"
 
-require 'active_support/notifications'
+require "active_support/notifications"
 
 module CompaniesHouse
   # This class manages individual requests.
@@ -41,7 +41,7 @@ module CompaniesHouse
       @notification_payload = {
         method: :get,
         path: path,
-        query: query
+        query: query,
       }
     end
 
@@ -49,7 +49,7 @@ module CompaniesHouse
       @started = Time.now.utc
 
       req = Net::HTTP::Get.new(@uri)
-      req.basic_auth @api_key, ''
+      req.basic_auth @api_key, ""
 
       response = connection.request req
       @notification_payload[:status] = response.code
@@ -79,13 +79,13 @@ module CompaniesHouse
 
     def parse(response, company_id)
       case response.code
-      when '200'
+      when "200"
         JSON[response.body]
-      when '401'
+      when "401"
         raise CompaniesHouse::AuthenticationError, response
-      when '404'
+      when "404"
         raise CompaniesHouse::NotFoundError.new(company_id, response)
-      when '429'
+      when "429"
         raise CompaniesHouse::RateLimitError, response
       else
         raise CompaniesHouse::APIError.new("Unknown API response", response)
