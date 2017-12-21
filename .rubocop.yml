@@ -1,2 +1,5 @@
 inherit_gem:
   ruboconfig: rubocop.yml
+
+AllCops:
+  TargetRubyVersion: 2.3
