@@ -5,4 +5,4 @@ source 'https://rubygems.org'
 # See companies-house.gemspec
 gemspec
 
-gem "ruboconfig", git: "https://github.com/gocardless/ruboconfig", tag: "v1.2.1"
+gem "gc_ruboconfig", "~> 2.0.0"
