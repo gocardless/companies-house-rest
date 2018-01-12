@@ -150,6 +150,7 @@ describe CompaniesHouse::Client do
         expect(request).to eq(%w[item1 item2])
       end
 
+      # rubocop:disable RSpec/ExampleLength
       it "sends two notifications" do
         notifications = notifications_of do
           request
@@ -179,6 +180,7 @@ describe CompaniesHouse::Client do
           )],
         )
       end
+      # rubocop:enable RSpec/ExampleLength
     end
 
     context "when the API returns an error" do
