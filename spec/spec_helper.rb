@@ -30,7 +30,8 @@ shared_context "test client" do
 end
 
 shared_examples "an error response" do
-  it "should raise a specific APIError" do
+  # rubocop:disable RSpec/ExampleLength, RSpec/MultipleExpectations
+  it "raises a specific APIError" do
     expect { request }.to raise_error do |error|
       expect(error).to be_a(error_class)
       expect(error.status).to eq(status.to_s)
@@ -38,8 +39,9 @@ shared_examples "an error response" do
       expect(error.message).to eq(message)
     end
   end
+  # rubocop:enable RSpec/ExampleLength, RSpec/MultipleExpectations
 
-  it_should_behave_like "sends one notification"
+  it_behaves_like "sends one notification"
 end
 
 shared_examples "an API that handles all errors" do
@@ -47,33 +49,37 @@ shared_examples "an API that handles all errors" do
     let(:status) { 404 }
     let(:message) { "Company #{company_id} not found - HTTP 404" }
     let(:error_class) { CompaniesHouse::NotFoundError }
-    it_should_behave_like "an error response"
+
+    it_behaves_like "an error response"
   end
 
   context "429" do
     let(:status) { 429 }
     let(:message) { "Rate limit exceeded - HTTP 429" }
     let(:error_class) { CompaniesHouse::RateLimitError }
-    it_should_behave_like "an error response"
+
+    it_behaves_like "an error response"
   end
 
   context "401" do
     let(:status) { 401 }
     let(:message) { "Invalid API key - HTTP 401" }
     let(:error_class) { CompaniesHouse::AuthenticationError }
-    it_should_behave_like "an error response"
+
+    it_behaves_like "an error response"
   end
 
   context "any other code" do
     let(:status) { 342 }
     let(:message) { "Unknown API response - HTTP 342" }
     let(:error_class) { CompaniesHouse::APIError }
-    it_should_behave_like "an error response"
+
+    it_behaves_like "an error response"
   end
 end
 
 shared_examples "sends one happy notification" do
-  it_should_behave_like "sends one notification" do
+  it_behaves_like "sends one notification" do
     let(:error_class) { nil }
   end
 end
@@ -81,6 +87,7 @@ end
 shared_examples "sends one notification" do
   let(:time) { Time.now.utc }
 
+  # rubocop:disable RSpec/ExampleLength
   it "records to ActiveSupport" do
     i = 0
     allow(SecureRandom).to receive(:hex).with(10) do
@@ -119,4 +126,5 @@ shared_examples "sends one notification" do
     )
     expect(recorded_notifications).to match([expected_event])
   end
+  # rubocop:enable RSpec/ExampleLength
 end
