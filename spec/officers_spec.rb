@@ -8,6 +8,7 @@ describe CompaniesHouse::Client do
 
   describe "#officers" do
     subject(:request) { client.officers(company_id) }
+
     let(:rest_path) { "company/#{company_id}/officers" }
     let(:request_method) { "officers" }
 
@@ -27,7 +28,7 @@ describe CompaniesHouse::Client do
           to_return(body: single_page, status: status)
       end
 
-      it "should return items from the one, single page" do
+      it "returns items from the one, single page" do
         expect(request).to eq(%w[item1 item2])
       end
 
@@ -64,11 +65,11 @@ describe CompaniesHouse::Client do
           to_return(body: page2, status: status)
       end
 
-      it "should return items from all pages" do
+      it "returns items from all pages" do
         expect(request).to eq(%w[item1 item2])
       end
 
-      it "should send two notifications" do
+      it "sends two notifications" do
         notifications = notifications_of do
           request
         end

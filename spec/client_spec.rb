@@ -40,18 +40,18 @@ describe CompaniesHouse::Client do
   describe "#end_connection" do
     include_context "test client"
 
-    it "should not throw an exception if not started" do
+    it "does not throw an exception if not started" do
       allow(client.connection).to receive(:started?).
         and_return(false)
 
-      expect { client.end_connection }.not_to raise_error
+      expect { client.end_connection }.to_not raise_error
     end
 
     it "is idempotent" do
       expect do
         client.end_connection
         client.end_connection
-      end.not_to raise_error
+      end.to_not raise_error
     end
   end
 end

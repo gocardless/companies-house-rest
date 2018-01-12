@@ -8,6 +8,7 @@ describe CompaniesHouse::Client do
 
   describe "#company" do
     subject(:request) { client.company(company_id) }
+
     let(:request_method) { "company" }
     let(:rest_path) { "company/#{company_id}" }
     let(:rest_query) { {} }
@@ -20,7 +21,8 @@ describe CompaniesHouse::Client do
 
     context "against a functioning API" do
       let(:status) { 200 }
-      it "should return a parsed JSON representation" do
+
+      it "returns a parsed JSON representation" do
         expect(request).to eq("company" => "data")
       end
 
