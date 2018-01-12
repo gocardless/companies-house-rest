@@ -174,9 +174,10 @@ describe CompaniesHouse::Client do
               response: JSON[page2],
               status: status.to_s,
             },
+            # This should match the transaction ID of the first notification
+            transaction_id: notifications[0].transaction_id,
           )],
         )
-        expect(notifications[0].transaction_id).to eq(notifications[1].transaction_id)
       end
     end
 
