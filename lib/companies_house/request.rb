@@ -28,7 +28,7 @@ module CompaniesHouse
 
     # Logical request attributes
     attribute :resource_type, Symbol, required: true
-    attribute :company_id, String, required: true
+    attribute :resource_id, String
 
     attribute :transaction_id, String, required: true
 
@@ -55,15 +55,13 @@ module CompaniesHouse
       @notification_payload[:status] = response.code
 
       begin
-        response_body = @notification_payload[:response] = parse(response, company_id)
+        @notification_payload[:response] = parse(response, resource_type, resource_id)
       rescue StandardError => e
         @notification_payload[:error] = e
         raise e
       ensure
         publish_notification
       end
-
-      response_body
     end
 
     private
@@ -77,14 +75,14 @@ module CompaniesHouse
       )
     end
 
-    def parse(response, company_id)
+    def parse(response, resource_type, resource_id)
       case response.code
       when "200"
         JSON[response.body]
       when "401"
         raise CompaniesHouse::AuthenticationError, response
       when "404"
-        raise CompaniesHouse::NotFoundError.new(company_id, response)
+        raise CompaniesHouse::NotFoundError.new(resource_type, resource_id, response)
       when "429"
         raise CompaniesHouse::RateLimitError, response
       else
