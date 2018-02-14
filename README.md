@@ -81,10 +81,11 @@ Details of the available fields in the response are in the Companies House
 [documentation](https://developer.companieshouse.gov.uk/api/docs/index.html).
 The endpoints currently implemented by the gem are:
 
-| Client Method               | Endpoint                                | Description |
-| --------------------------- | --------------------------------------- | ----------- |
-| `.company(company_number)`  | `GET /company/:company_number`          | Retrieves a company profile. |
-| `.officers(company_number)` | `GET /company/:company_number/officers` | Retrieves a list of company officers. |
+| Client Method                                                   | Endpoint                                | Description |
+| --------------------------------------------------------------- | --------------------------------------- | ----------- |
+| `.company(company_number)`                                      | `GET /company/:company_number`          | Retrieves a company profile. |
+| `.officers(company_number)`                                     | `GET /company/:company_number/officers` | Retrieves a list of company officers. |
+| `.company_search(query, items_per_page: nil, start_index: nil)` | `GET /search/companies`                 | Retrieves a list of companies that match the given query. |
 
 ### .company
 This method implements the [readCompanyProfile](https://developer.companieshouse.gov.uk/api/docs/company/company_number/readCompanyProfile.html)
@@ -98,6 +99,11 @@ the full list of company officers. It returns only the values under the `items`
 key from the
 [officerList](https://developer.companieshouse.gov.uk/api/docs/company/company_number/officers/officerList-resource.html)
 resource(s) which it reads.
+
+### .company_search
+This method implements the [searchCompanies](https://developer.companieshouse.gov.uk/api/docs/search/companies/companysearch.html)
+API and returns the list of [companySearch](https://developer.companieshouse.gov.uk/api/docs/search-overview/CompanySearch-resource.html)
+resources that match the given query. The `items_per_page` and `start_index` parameters are optional.
 
 ### Other API Methods
 While there are other resources exposed by the

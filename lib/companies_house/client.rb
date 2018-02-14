@@ -24,7 +24,7 @@ module CompaniesHouse
     end
 
     def company(id)
-      request(:company, id)
+      request(:company, "company/#{id}", {}, make_transaction_id, id)
     end
 
     # The API endpoint for company officers is paginated, and not all of the officers may
@@ -36,7 +36,8 @@ module CompaniesHouse
       xid = make_transaction_id
 
       loop do
-        page = request(:officers, id, "/officers", { start_index: offset }, xid)
+        page = request(:officers, "company/#{id}/officers",
+                       { start_index: offset }, xid, id)
         new_items = page["items"]
         total = page["total_results"] || new_items.count
 
@@ -47,6 +48,14 @@ module CompaniesHouse
       end
 
       items
+    end
+
+    def company_search(query, items_per_page: nil, start_index: nil)
+      request(
+        :company_search,
+        "search/companies",
+        { q: query, items_per_page: items_per_page, start_index: start_index }.compact,
+      )
     end
 
     def connection
@@ -62,18 +71,18 @@ module CompaniesHouse
     end
 
     def request(resource,
-                company_id,
-                extra_path = "",
+                path,
                 params = {},
-                transaction_id = make_transaction_id)
+                transaction_id = make_transaction_id,
+                resource_id = nil)
       Request.new(
         connection: connection,
         api_key: @api_key,
         endpoint: @endpoint,
-        path: "company/#{company_id}#{extra_path}",
+        path: path,
         query: params,
         resource_type: resource,
-        company_id: company_id,
+        resource_id: resource_id,
         transaction_id: transaction_id,
       ).execute
     end

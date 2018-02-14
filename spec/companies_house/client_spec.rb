@@ -58,7 +58,7 @@ describe CompaniesHouse::Client do
   describe "#company" do
     include_context "test client"
 
-    subject(:request) { client.company(company_id) }
+    subject(:response) { client.company(company_id) }
 
     let(:request_method) { "company" }
     let(:rest_path) { "company/#{company_id}" }
@@ -74,7 +74,7 @@ describe CompaniesHouse::Client do
       let(:status) { 200 }
 
       it "returns a parsed JSON representation" do
-        expect(request).to eq("company" => "data")
+        expect(response).to eq("company" => "data")
       end
 
       it_behaves_like "sends one happy notification"
@@ -88,7 +88,7 @@ describe CompaniesHouse::Client do
   describe "#officers" do
     include_context "test client"
 
-    subject(:request) { client.officers(company_id) }
+    subject(:response) { client.officers(company_id) }
 
     let(:rest_path) { "company/#{company_id}/officers" }
     let(:request_method) { "officers" }
@@ -110,7 +110,7 @@ describe CompaniesHouse::Client do
       end
 
       it "returns items from the one, single page" do
-        expect(request).to eq(%w[item1 item2])
+        expect(response).to eq(%w[item1 item2])
       end
 
       it_behaves_like "sends one happy notification" do
@@ -147,13 +147,13 @@ describe CompaniesHouse::Client do
       end
 
       it "returns items from all pages" do
-        expect(request).to eq(%w[item1 item2])
+        expect(response).to eq(%w[item1 item2])
       end
 
       # rubocop:disable RSpec/ExampleLength
       it "sends two notifications" do
         notifications = notifications_of do
-          request
+          response
         end
 
         expect(notifications).to match(
@@ -192,6 +192,88 @@ describe CompaniesHouse::Client do
 
       it_behaves_like "an API that handles all errors" do
         let(:rest_query) { { start_index: 0 } }
+      end
+    end
+  end
+
+  describe "#company_search" do
+    include_context "test client"
+
+    let(:request_method) { "company_search" }
+    let(:rest_path) { "search/companies" }
+    let(:query) { "020" }
+    let(:company_id) { nil }
+
+    context "using only mandatory parameter" do
+      subject(:response) { client.company_search(query) }
+
+      let(:rest_query) { { q: query } }
+
+      before do
+        stub_request(
+          :get,
+          "#{example_endpoint}/#{rest_path}?q=#{query}",
+        ).
+          with(basic_auth: [api_key, ""]).
+          to_return(body: '{"companies": "data"}', status: status)
+      end
+
+      context "against a functioning API" do
+        let(:status) { 200 }
+
+        it "returns a parsed JSON representation" do
+          expect(response).to eq("companies" => "data")
+        end
+
+        it_behaves_like "sends one happy notification"
+      end
+
+      context "when the API returns an error" do
+        it_behaves_like "an API that handles all errors"
+      end
+    end
+
+    context "providing all parameters" do
+      subject(:response) do
+        client.company_search(
+          query,
+          items_per_page: items_per_page,
+          start_index: start_index,
+        )
+      end
+
+      let(:rest_query) do
+        {
+          q: query,
+          items_per_page: items_per_page,
+          start_index: start_index,
+        }
+      end
+      let(:items_per_page) { 5 }
+      let(:start_index) { 3 }
+
+      before do
+        stub_request(
+          :get,
+          "#{example_endpoint}/#{rest_path}?items_per_page=#{items_per_page}\
+&q=#{query}&start_index=#{start_index}",
+        ).
+          with(basic_auth: [api_key, ""]).
+          to_return(body: '{"companies": "data"}', status: status)
+      end
+
+      context "against a functioning API" do
+        let(:status) { 200 }
+
+        it "returns a parsed JSON representation" do
+          expect(response).to eq("companies" => "data")
+        end
+
+        it_behaves_like "sends one happy notification"
+      end
+
+      context "when the API returns an error" do
+        it_behaves_like "an API that handles all errors"
       end
     end
   end
