@@ -5,3 +5,6 @@ inherit_gem:
 
 AllCops:
   TargetRubyVersion: 2.3
+
+RSpec/NestedGroups:
+  Max: 8

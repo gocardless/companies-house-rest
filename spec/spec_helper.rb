@@ -32,7 +32,7 @@ end
 shared_examples "an error response" do
   # rubocop:disable RSpec/ExampleLength, RSpec/MultipleExpectations
   it "raises a specific APIError" do
-    expect { request }.to raise_error do |error|
+    expect { response }.to raise_error do |error|
       expect(error).to be_a(error_class)
       expect(error.status).to eq(status.to_s)
       expect(error.response).to be_a(Net::HTTPResponse)
@@ -47,8 +47,11 @@ end
 shared_examples "an API that handles all errors" do
   context "404" do
     let(:status) { 404 }
-    let(:message) { "Company #{company_id} not found - HTTP 404" }
     let(:error_class) { CompaniesHouse::NotFoundError }
+    let(:message) do
+      "Resource not found - type `#{request_method}`, id `#{company_id || 'nil'}` \
+- HTTP 404"
+    end
 
     it_behaves_like "an error response"
   end
@@ -98,7 +101,7 @@ shared_examples "sends one notification" do
     recorded_notifications = notifications_of do
       Timecop.freeze(time) do
         begin
-          request
+          response
         rescue StandardError
           ""
         end
