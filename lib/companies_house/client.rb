@@ -31,12 +31,12 @@ module CompaniesHouse
       get_all_pages(:officers, "company/#{id}/officers", id)
     end
 
-    def persons_with_significant_control(id)
+    def persons_with_significant_control(id, register_view: false)
       get_all_pages(
         :persons_with_significant_control,
         "company/#{id}/persons-with-significant-control",
         id,
-        register_view: true,
+        register_view: register_view,
       )
     end
 
