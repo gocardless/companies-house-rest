@@ -27,27 +27,17 @@ module CompaniesHouse
       request(:company, "company/#{id}", {}, make_transaction_id, id)
     end
 
-    # The API endpoint for company officers is paginated, and not all of the officers may
-    # be returned in the first request. We deal with this by collating all the pages of
-    # results into one result set before returning them.
     def officers(id)
-      items = []
-      offset = 0
-      xid = make_transaction_id
+      get_all_pages(:officers, "company/#{id}/officers", id)
+    end
 
-      loop do
-        page = request(:officers, "company/#{id}/officers",
-                       { start_index: offset }, xid, id)
-        new_items = page["items"]
-        total = page["total_results"] || new_items.count
-
-        items += new_items
-        offset += new_items.count
-
-        break if items.count >= total
-      end
-
-      items
+    def persons_with_significant_control(id)
+      get_all_pages(
+        :persons_with_significant_control,
+        "company/#{id}/persons-with-significant-control",
+        id,
+        register_view: true,
+      )
     end
 
     def company_search(query, items_per_page: nil, start_index: nil)
@@ -65,6 +55,26 @@ module CompaniesHouse
     end
 
     private
+
+    # Fetch and combine all pages of a paginated API call
+    def get_all_pages(resource, path, id, query = {})
+      items = []
+      offset = 0
+      xid = make_transaction_id
+
+      loop do
+        page = request(resource, path, query.merge(start_index: offset), xid, id)
+        new_items = page["items"]
+        total = page["total_results"] || new_items.count
+
+        items += new_items
+        offset += new_items.count
+
+        break if items.count >= total
+      end
+
+      items
+    end
 
     def make_transaction_id
       SecureRandom.hex(10)
