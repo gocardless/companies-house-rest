@@ -199,12 +199,16 @@ describe CompaniesHouse::Client do
   describe "#persons_with_significant_control" do
     include_context "test client"
 
-    subject(:response) { client.persons_with_significant_control(company_id) }
+    subject(:response) do
+      client.persons_with_significant_control(company_id, register_view: register_view)
+    end
 
     let(:rest_path) do
-      "company/#{company_id}/persons-with-significant-control?register_view=true"
+      "company/#{company_id}/persons-with-significant-control" \
+        "?register_view=#{register_view}"
     end
     let(:request_method) { "persons_with_significant_control" }
+    let(:register_view) { true }
 
     context "when all results are on a single page" do
       let(:single_page) do
@@ -220,12 +224,20 @@ describe CompaniesHouse::Client do
         stub_request(:get, "#{example_endpoint}/#{rest_path}").
           with(
             basic_auth: [api_key, ""],
-            query: { "start_index" => 0, register_view: true },
+            query: { "start_index" => 0, register_view: register_view },
           ).to_return(body: single_page, status: status)
       end
 
       it "returns items from the one, single page" do
         expect(response).to eq(%w[item1 item2])
+      end
+
+      context "with register_view: false" do
+        let(:register_view) { false }
+
+        it "returns items from the one, single page" do
+          expect(response).to eq(%w[item1 item2])
+        end
       end
     end
 
