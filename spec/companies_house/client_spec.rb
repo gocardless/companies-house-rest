@@ -35,6 +35,16 @@ describe CompaniesHouse::Client do
     it "demands an API key" do
       expect { described_class.new({}) }.to raise_error(ArgumentError)
     end
+
+    it "supports setting open_timeout" do
+      client = described_class.new(api_key: "key", open_timeout: 1)
+      expect(client.connection.open_timeout).to eq(1)
+    end
+
+    it "supports setting read_timeout" do
+      client = described_class.new(api_key: "key", read_timeout: 2)
+      expect(client.connection.read_timeout).to eq(2)
+    end
   end
 
   describe "#end_connection" do
