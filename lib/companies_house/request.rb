@@ -4,6 +4,7 @@ require "companies_house/api_error"
 require "companies_house/not_found_error"
 require "companies_house/authentication_error"
 require "companies_house/rate_limit_error"
+require "companies_house/timeout_error"
 
 require "virtus"
 require "uri"
@@ -62,6 +63,8 @@ module CompaniesHouse
       ensure
         publish_notification
       end
+    rescue Net::OpenTimeout, Net::ReadTimeout
+      raise TimeoutError
     end
 
     private
