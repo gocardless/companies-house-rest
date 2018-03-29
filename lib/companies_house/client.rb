@@ -16,6 +16,8 @@ module CompaniesHouse
       raise ArgumentError, "Missing API key" unless config[:api_key]
       @api_key = config[:api_key]
       @endpoint = URI(config[:endpoint] || ENDPOINT)
+      @open_timeout = config[:open_timeout] || 60
+      @read_timeout = config[:read_timeout] || 60
       raise ArgumentError, "HTTP is not supported" if @endpoint.scheme != "https"
     end
 
@@ -51,6 +53,8 @@ module CompaniesHouse
     def connection
       @connection ||= Net::HTTP.new(endpoint.host, endpoint.port).tap do |conn|
         conn.use_ssl = true
+        conn.open_timeout = @open_timeout
+        conn.read_timeout = @read_timeout
       end
     end
 
