@@ -4,8 +4,5 @@ inherit_gem:
 Metrics/MethodLength:
   Max: 15
 
-AllCops:
-  TargetRubyVersion: 2.3
-
 RSpec/NestedGroups:
   Max: 8

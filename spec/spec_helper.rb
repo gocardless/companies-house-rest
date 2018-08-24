@@ -100,11 +100,9 @@ shared_examples "sends one notification" do
 
     recorded_notifications = notifications_of do
       Timecop.freeze(time) do
-        begin
-          response
-        rescue StandardError
-          ""
-        end
+        response
+      rescue StandardError
+        ""
       end
     end
 
