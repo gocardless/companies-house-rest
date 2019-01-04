@@ -14,6 +14,7 @@ module CompaniesHouse
 
     def initialize(config)
       raise ArgumentError, "Missing API key" unless config[:api_key]
+
       @api_key = config[:api_key]
       @endpoint = URI(config[:endpoint] || ENDPOINT)
       @open_timeout = config[:open_timeout] || 60
