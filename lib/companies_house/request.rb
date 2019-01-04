@@ -5,6 +5,7 @@ require "companies_house/not_found_error"
 require "companies_house/authentication_error"
 require "companies_house/rate_limit_error"
 require "companies_house/timeout_error"
+require "companies_house/bad_gateway_error"
 
 require "virtus"
 require "uri"
@@ -88,6 +89,8 @@ module CompaniesHouse
         raise CompaniesHouse::NotFoundError.new(resource_type, resource_id, response)
       when "429"
         raise CompaniesHouse::RateLimitError, response
+      when "502"
+        raise CompaniesHouse::BadGatewayError, response
       else
         raise CompaniesHouse::APIError.new("Unknown API response", response)
       end
