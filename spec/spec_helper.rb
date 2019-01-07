@@ -72,6 +72,14 @@ shared_examples "an API that handles all errors" do
     it_behaves_like "an error response"
   end
 
+  context "502" do
+    let(:status) { 502 }
+    let(:message) { "Bad gateway error - HTTP 502" }
+    let(:error_class) { CompaniesHouse::BadGatewayError }
+
+    it_behaves_like "an error response"
+  end
+
   context "any other code" do
     let(:status) { 342 }
     let(:message) { "Unknown API response - HTTP 342" }
