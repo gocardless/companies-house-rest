@@ -1,10 +1,46 @@
 version: 2
-jobs:
-  build:
-    docker:
-    - image: circleci/ruby:2.5.1
-    steps:
+
+references:
+  steps: &steps
     - checkout
-    - run: bundle install
+
+    - type: cache-restore
+      key: companies-house-rest-bundler-{{ checksum "companies-house-rest.gemspec" }}
+
+    - run: gem install bundler -v 1.17
+
+    - run: bundle install --path vendor/bundle
+
+    - type: cache-save
+      key: companies-house-rest-bundler-{{ checksum "companies-house-rest.gemspec" }}
+      paths:
+        - vendor/bundle
+
+    - type: shell
+      command: |
+        bundle exec rspec --profile 10 \
+                          --format RspecJunitFormatter \
+                          --out /tmp/test-results/rspec.xml \
+                          --format progress \
+                          spec
+
+    - type: store_test_results
+      path: /tmp/test-results
+
     - run: bundle exec rubocop
-    - run: bundle exec rspec
+jobs:
+  build-ruby25:
+    docker:
+      - image: ruby:2.5
+    steps: *steps
+  build-ruby26:
+    docker:
+      - image: ruby:2.6
+    steps: *steps
+
+workflows:
+  version: 2
+  tests:
+    jobs:
+      - build-ruby25
+      - build-ruby26
