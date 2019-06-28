@@ -1,20 +1,12 @@
 # frozen_string_literal: true
 
 require "webmock/rspec"
+require "active_support"
+
 $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
 require "companies_house/client"
 require "timecop"
 
-def notifications_of
-  notifications = []
-  subscriber = ActiveSupport::Notifications.subscribe do |*args|
-    notifications << ActiveSupport::Notifications::Event.new(*args)
-  end
-
-  yield
-  ActiveSupport::Notifications.unsubscribe(subscriber)
-  notifications
-end
 
 shared_context "test credentials" do
   let(:api_key) { "el-psy-congroo" }
@@ -98,20 +90,24 @@ end
 shared_examples "sends one notification" do
   let(:time) { Time.now.utc }
 
+  before do
+    allow(client.instrumentation).to receive(:publish)
+  end
+
   # rubocop:disable RSpec/ExampleLength
-  it "records to ActiveSupport" do
+  it "records an instrumentation" do
     i = 0
     allow(SecureRandom).to receive(:hex).with(10) do
       i += 1
       sprintf("RANDOM%04d", i)
     end
 
-    recorded_notifications = notifications_of do
+    begin
       Timecop.freeze(time) do
         response
-      rescue StandardError
-        ""
       end
+    rescue StandardError
+      ""
     end
 
     expected_payload = {
@@ -126,14 +122,13 @@ shared_examples "sends one notification" do
       expected_payload[:response] = be_truthy
     end
 
-    expected_event = have_attributes(
-      name: "companies_house.#{request_method}",
-      time: time,
-      end: time,
-      payload: expected_payload,
-      transaction_id: "RANDOM0001",
+    expect(client.instrumentation).to have_received(:publish).with(
+      "companies_house.#{request_method}",
+      time,
+      time,
+      "RANDOM0001",
+      expected_payload,
     )
-    expect(recorded_notifications).to match([expected_event])
   end
   # rubocop:enable RSpec/ExampleLength
 end

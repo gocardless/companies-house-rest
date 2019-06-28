@@ -11,8 +11,6 @@ require "virtus"
 require "uri"
 require "json"
 
-require "active_support/notifications"
-
 module CompaniesHouse
   # This class manages individual requests.
   # Users of the CompaniesHouse gem should not instantiate this class
@@ -33,6 +31,7 @@ module CompaniesHouse
     attribute :resource_id, String
 
     attribute :transaction_id, String, required: true
+    attribute :instrumentation
 
     def initialize(args)
       super(args)
@@ -71,11 +70,12 @@ module CompaniesHouse
     private
 
     def publish_notification
-      ActiveSupport::Notifications.publish(
+      instrumentation.publish(
         "companies_house.#{resource_type}",
-        @started, Time.now.utc,
+        @started,
+        Time.now.utc,
         transaction_id,
-        @notification_payload
+        @notification_payload,
       )
     end
 
