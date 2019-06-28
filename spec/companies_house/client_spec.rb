@@ -3,7 +3,6 @@
 require "spec_helper"
 require "json"
 
-puts "In the spec"
 require "active_support"
 
 describe CompaniesHouse::Client do
