@@ -3,8 +3,6 @@
 require "spec_helper"
 require "json"
 
-require "active_support"
-
 describe CompaniesHouse::Client do
   before { WebMock.disable_net_connect! }
 
