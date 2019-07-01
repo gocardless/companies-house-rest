@@ -2,12 +2,9 @@
 
 require "companies_house/request"
 require "companies_house/instrumentation/null"
+require "companies_house/instrumentation/active_support"
 require "net/http"
 require "securerandom"
-
-if defined?(ActiveSupport)
-  require_relative "./instrumentation/active_support"
-end
 
 module CompaniesHouse
   # This class provides an interface to the Companies House API
@@ -25,7 +22,7 @@ module CompaniesHouse
       @endpoint = URI(config[:endpoint] || ENDPOINT)
       @open_timeout = config[:open_timeout] || 60
       @read_timeout = config[:read_timeout] || 60
-      @instrumentation = config[:instrumentation] || Instrumentation::Null
+      @instrumentation = default_instrumentation
       raise ArgumentError, "HTTP is not supported" if @endpoint.scheme != "https"
     end
 
@@ -108,6 +105,14 @@ module CompaniesHouse
         transaction_id: transaction_id,
         instrumentation: instrumentation,
       ).execute
+    end
+
+    def default_instrumentation
+      if defined?(ActiveSupport::Notifications)
+        Instrumentation::ActiveSupport
+      else
+        Instrumentation::Null
+      end
     end
   end
 end

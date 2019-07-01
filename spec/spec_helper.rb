@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
 require "webmock/rspec"
-require "active_support"
 
 $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
 require "companies_house/client"
 require "timecop"
-
 
 shared_context "test credentials" do
   let(:api_key) { "el-psy-congroo" }

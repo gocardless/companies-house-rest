@@ -46,15 +46,14 @@ describe CompaniesHouse::Client do
       expect(client.connection.read_timeout).to eq(2)
     end
 
-    it "sets the Null instrumenter by default" do
+    it "sets the Null instrumenter when ActiveSupport is not present" do
       client = described_class.new(api_key: "key")
-
       expect(client.instrumentation).to eq(Instrumentation::Null)
     end
 
     it "can set the ActiveSupport instrumenter if constant is defined" do
-      client = described_class.new(api_key: "key", instrumentation: Instrumentation::ActiveSupport)
-
+      class_double("ActiveSupport::Notifications").as_stubbed_const
+      client = described_class.new(api_key: "key")
       expect(client.instrumentation).to eq(Instrumentation::ActiveSupport)
     end
   end

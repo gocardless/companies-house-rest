@@ -69,15 +69,14 @@ client = CompaniesHouse::Client.new(config)
 The client is configured by passing a hash to the constructor. The supported keys for this
 hash are:
 
-| Key                | Description |
-| -----------        | ----------- |
-| `:api_key`         | Required. The API key received after registration. |
-| `:endpoint`        | Optional. Specifies the base URI for the API (e.g. if using a self-hosted version) |
-| `:instrumentation` | Optional. Instruments the request/response (see Instrumentation for details) |
+| Key         | Description |
+| ----------- | ----------- |
+| `:api_key`  | Required. The API key received after registration. |
+| `:endpoint` | Optional. Specifies the base URI for the API (e.g. if using a self-hosted version) |
 
 ## Instrumentation
 By default, no instrumentation is being applied.
-If you are using Rails or the `ActiveSupport` gem, you can pass to the client `instrumentation: Intstrumentation::ActiveSupport`
+If you are using Rails or the `ActiveSupport` gem, instrumentation will happen automatically via ![ActiveSupport::Notifications](https://api.rubyonrails.org/classes/ActiveSupport/Notifications.html)
 
 ## Requests
 
