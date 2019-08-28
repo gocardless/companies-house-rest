@@ -88,10 +88,6 @@ end
 shared_examples "sends one notification" do
   let(:time) { Time.now.utc }
 
-  before do
-    allow(client.instrumentation).to receive(:publish)
-  end
-
   # rubocop:disable RSpec/ExampleLength
   it "records an instrumentation" do
     i = 0
@@ -100,6 +96,27 @@ shared_examples "sends one notification" do
       sprintf("RANDOM%04d", i)
     end
 
+    expected_payload = {
+      method: :get,
+      path: rest_path,
+      query: rest_query,
+      status: status.to_s,
+    }
+
+    if error_class
+      expected_payload[:error] = be_a(error_class)
+    else
+      expected_payload[:response] = be_truthy
+    end
+
+    expect(client.instrumentation).to receive(:publish).with(
+      "companies_house.#{request_method}",
+      time,
+      time,
+      "RANDOM0001",
+      expected_payload,
+    )
+
     begin
       Timecop.freeze(time) do
         response
@@ -107,26 +124,6 @@ shared_examples "sends one notification" do
     rescue StandardError
       ""
     end
-
-    expected_payload = {
-      method: :get,
-      path: rest_path,
-      query: rest_query,
-      status: status.to_s,
-    }
-    if error_class
-      expected_payload[:error] = be_a(error_class)
-    else
-      expected_payload[:response] = be_truthy
-    end
-
-    expect(client.instrumentation).to have_received(:publish).with(
-      "companies_house.#{request_method}",
-      time,
-      time,
-      "RANDOM0001",
-      expected_payload,
-    )
   end
   # rubocop:enable RSpec/ExampleLength
 end
