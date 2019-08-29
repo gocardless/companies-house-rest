@@ -22,7 +22,7 @@ module CompaniesHouse
       @endpoint = URI(config[:endpoint] || ENDPOINT)
       @open_timeout = config[:open_timeout] || 60
       @read_timeout = config[:read_timeout] || 60
-      @instrumentation = default_instrumentation
+      @instrumentation = configure_instrumentation(config[:instrumentation])
       raise ArgumentError, "HTTP is not supported" if @endpoint.scheme != "https"
     end
 
@@ -107,7 +107,9 @@ module CompaniesHouse
       ).execute
     end
 
-    def default_instrumentation
+    def configure_instrumentation(instrumentation)
+      return instrumentation unless instrumentation.nil?
+
       if defined?(ActiveSupport::Notifications)
         Instrumentation::ActiveSupport
       else
