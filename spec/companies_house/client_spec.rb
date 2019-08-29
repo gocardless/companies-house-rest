@@ -45,6 +45,17 @@ describe CompaniesHouse::Client do
       client = described_class.new(api_key: "key", read_timeout: 2)
       expect(client.connection.read_timeout).to eq(2)
     end
+
+    it "sets the Null instrumenter when ActiveSupport is not present" do
+      client = described_class.new(api_key: "key")
+      expect(client.instrumentation).to eq(Instrumentation::Null)
+    end
+
+    it "can set the ActiveSupport instrumenter if constant is defined" do
+      class_double("ActiveSupport::Notifications").as_stubbed_const
+      client = described_class.new(api_key: "key")
+      expect(client.instrumentation).to eq(Instrumentation::ActiveSupport)
+    end
   end
 
   describe "#end_connection" do
@@ -160,36 +171,39 @@ describe CompaniesHouse::Client do
         expect(response).to eq(%w[item1 item2])
       end
 
+      # rubocop:disable RSpec/MultipleExpectations
       # rubocop:disable RSpec/ExampleLength
       it "sends two notifications" do
-        notifications = notifications_of do
-          response
-        end
-
-        expect(notifications).to match(
-          [have_attributes(
-            name: "companies_house.officers",
-            payload: {
-              method: :get,
-              path: rest_path,
-              query: { start_index: 0 },
-              response: JSON[page1],
-              status: status.to_s,
-            },
-          ), have_attributes(
-            name: "companies_house.officers",
-            payload: {
-              method: :get,
-              path: rest_path,
-              query: { start_index: 1 },
-              response: JSON[page2],
-              status: status.to_s,
-            },
-            # This should match the transaction ID of the first notification
-            transaction_id: notifications[0].transaction_id,
-          )],
+        expect(client.instrumentation).to receive(:publish).with(
+          "companies_house.officers",
+          kind_of(Time),
+          kind_of(Time),
+          kind_of(String),
+          hash_including(
+            method: :get,
+            path: rest_path,
+            query: { start_index: 0 },
+            response: JSON[page1],
+            status: status.to_s,
+          ),
         )
+        expect(client.instrumentation).to receive(:publish).with(
+          "companies_house.officers",
+          kind_of(Time),
+          kind_of(Time),
+          kind_of(String),
+          hash_including(
+            method: :get,
+            path: rest_path,
+            query: { start_index: 1 },
+            response: JSON[page2],
+            status: status.to_s,
+          ),
+        )
+
+        response
       end
+      # rubocop:enable RSpec/MultipleExpectations
       # rubocop:enable RSpec/ExampleLength
     end
 

@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 require "companies_house/request"
+require "companies_house/instrumentation/null"
+require "companies_house/instrumentation/active_support"
 require "net/http"
+require "securerandom"
 
 module CompaniesHouse
   # This class provides an interface to the Companies House API
@@ -10,7 +13,7 @@ module CompaniesHouse
   class Client
     ENDPOINT = "https://api.companieshouse.gov.uk"
 
-    attr_reader :api_key, :endpoint
+    attr_reader :api_key, :endpoint, :instrumentation
 
     def initialize(config)
       raise ArgumentError, "Missing API key" unless config[:api_key]
@@ -19,6 +22,7 @@ module CompaniesHouse
       @endpoint = URI(config[:endpoint] || ENDPOINT)
       @open_timeout = config[:open_timeout] || 60
       @read_timeout = config[:read_timeout] || 60
+      @instrumentation = configure_instrumentation(config[:instrumentation])
       raise ArgumentError, "HTTP is not supported" if @endpoint.scheme != "https"
     end
 
@@ -99,7 +103,18 @@ module CompaniesHouse
         resource_type: resource,
         resource_id: resource_id,
         transaction_id: transaction_id,
+        instrumentation: instrumentation,
       ).execute
+    end
+
+    def configure_instrumentation(instrumentation)
+      return instrumentation unless instrumentation.nil?
+
+      if defined?(ActiveSupport::Notifications)
+        Instrumentation::ActiveSupport
+      else
+        Instrumentation::Null
+      end
     end
   end
 end
