@@ -3,7 +3,7 @@
 module Instrumentation
   class ActiveSupport
     def self.publish(*args)
-      ::ActiveSupport::Notifications.publish(**args)
+      ::ActiveSupport::Notifications.publish(*args)
     end
   end
 end

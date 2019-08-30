@@ -186,7 +186,7 @@ describe CompaniesHouse::Client do
             response: JSON[page1],
             status: status.to_s,
           ),
-        )
+        ).and_call_original
         expect(client.instrumentation).to receive(:publish).with(
           "companies_house.officers",
           kind_of(Time),
@@ -199,7 +199,7 @@ describe CompaniesHouse::Client do
             response: JSON[page2],
             status: status.to_s,
           ),
-        )
+        ).and_call_original
 
         response
       end
