@@ -47,6 +47,17 @@ module CompaniesHouse
       )
     end
 
+    def filing_history_list(id)
+      get_all_pages(:filing_history_list, "company/#{id}/filing-history", id)
+    end
+
+    def filing_history_item(id, transaction_id)
+      request(
+        :filing_history_item,
+        "company/#{id}/filing-history/#{transaction_id}",
+      )
+    end
+
     def company_search(query, items_per_page: nil, start_index: nil)
       request(
         :company_search,
@@ -93,7 +104,8 @@ module CompaniesHouse
                 path,
                 params = {},
                 transaction_id = make_transaction_id,
-                resource_id = nil)
+                resource_id = nil,
+                headers = {})
       Request.new(
         connection: connection,
         api_key: @api_key,
@@ -104,6 +116,7 @@ module CompaniesHouse
         resource_id: resource_id,
         transaction_id: transaction_id,
         instrumentation: instrumentation,
+        headers: headers,
       ).execute
     end
 

@@ -110,6 +110,13 @@ This method implements the [searchCompanies](https://developer.companieshouse.go
 API and returns the list of [companySearch](https://developer.companieshouse.gov.uk/api/docs/search-overview/CompanySearch-resource.html)
 resources that match the given query. The `items_per_page` and `start_index` parameters are optional.
 
+### .filing_history_list
+This method implements the [filingHistoryList](https://developer.companieshouse.gov.uk/api/docs/company/company_number/filing-history/getFilingHistoryList.html) API and returns the full [filingHistoryList](https://developer.companieshouse.gov.uk/api/docs/company/company_number/filing-history/filingHistoryList-resource.html) resource.
+
+### .filing_history_item
+This method implements the [filingHistoryItem](https://developer.companieshouse.gov.uk/api/docs/company/company_number/filing-history/transaction_id/getFilingHistoryItem.html) API and returns the full
+[filingHistoryItem](https://developer.companieshouse.gov.uk/api/docs/company/company_number/filing-history/filingHistoryItem-resource.html) resource.
+
 ### Other API Methods
 While there are other resources exposed by the
 [Companies House API](https://developer.companieshouse.gov.uk/api/docs/index.html),
