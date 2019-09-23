@@ -10,7 +10,7 @@ require "companies_house/bad_gateway_error"
 require "net/http"
 require "uri"
 require "json"
-require 'dry-struct'
+require "dry-struct"
 
 module CompaniesHouse
   # This class manages individual requests.
@@ -48,11 +48,7 @@ module CompaniesHouse
 
     def execute
       @started = Time.now.utc
-
-      req = Net::HTTP::Get.new(@uri)
-      req.basic_auth api_key, ""
-
-      response = connection.request req
+      response = request_resource(@uri)
       @notification_payload[:status] = response.code
 
       begin
@@ -68,6 +64,13 @@ module CompaniesHouse
     end
 
     private
+
+    def request_resource(uri)
+      req = Net::HTTP::Get.new(uri)
+      req.basic_auth api_key, ""
+
+      connection.request req
+    end
 
     def publish_notification
       instrumentation.publish(
