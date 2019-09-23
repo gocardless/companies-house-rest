@@ -7,6 +7,7 @@ require "companies_house/rate_limit_error"
 require "companies_house/timeout_error"
 require "companies_house/bad_gateway_error"
 
+require "net/http"
 require "virtus"
 require "uri"
 require "json"
