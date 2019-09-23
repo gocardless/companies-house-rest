@@ -8,31 +8,30 @@ require "companies_house/timeout_error"
 require "companies_house/bad_gateway_error"
 
 require "net/http"
-require "virtus"
 require "uri"
 require "json"
+require 'dry-struct'
 
 module CompaniesHouse
   # This class manages individual requests.
   # Users of the CompaniesHouse gem should not instantiate this class
   # and should instead use CompaniesHouse::Client.
-  class Request
-    include Virtus.model
+  class Request < Dry::Struct
     # API-level attributes
-    attribute :connection, Net::HTTP, required: true
-    attribute :api_key, String, required: true
-    attribute :endpoint, URI, required: true
+    attribute :connection, Dry.Types.Instance(Net::HTTP)
+    attribute :api_key, Dry.Types::String
+    attribute :endpoint, Dry.Types.Instance(URI)
 
     # Physical request attributes
-    attribute :path, String, required: true
-    attribute :query, Hash, required: true
+    attribute :path, Dry.Types::String
+    attribute :query, Dry.Types::Hash
 
     # Logical request attributes
-    attribute :resource_type, Symbol, required: true
-    attribute :resource_id, String
+    attribute :resource_type, Dry.Types::Symbol
+    attribute :resource_id, Dry.Types.Nominal(Integer)
 
-    attribute :transaction_id, String, required: true
-    attribute :instrumentation
+    attribute :transaction_id, Dry.Types::String
+    attribute :instrumentation, Dry.Types.Interface(:publish)
 
     def initialize(args)
       super(args)
@@ -51,7 +50,7 @@ module CompaniesHouse
       @started = Time.now.utc
 
       req = Net::HTTP::Get.new(@uri)
-      req.basic_auth @api_key, ""
+      req.basic_auth api_key, ""
 
       response = connection.request req
       @notification_payload[:status] = response.code
