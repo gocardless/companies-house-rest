@@ -93,7 +93,7 @@ shared_examples "sends one notification" do
     i = 0
     allow(SecureRandom).to receive(:hex).with(10) do
       i += 1
-      sprintf("RANDOM%04d", i)
+      sprintf("RANDOM%<i>04d", i: i)
     end
 
     expected_payload = {
