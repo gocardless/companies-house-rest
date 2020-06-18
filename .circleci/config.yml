@@ -37,6 +37,10 @@ jobs:
     docker:
       - image: ruby:2.6
     steps: *steps
+  build-ruby27:
+    docker:
+      - image: ruby:2.7
+    steps: *steps
 
 workflows:
   version: 2
@@ -44,3 +48,4 @@ workflows:
     jobs:
       - build-ruby25
       - build-ruby26
+      - build-ruby27
