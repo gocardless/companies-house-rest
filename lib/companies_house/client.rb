@@ -74,6 +74,26 @@ module CompaniesHouse
       end
     end
 
+    def request(resource,
+                path,
+                params = {},
+                transaction_id = make_transaction_id,
+                resource_id = nil,
+                headers = {})
+      Request.new(
+        connection: connection,
+        api_key: @api_key,
+        endpoint: @endpoint,
+        path: path,
+        query: params,
+        resource_type: resource,
+        resource_id: resource_id,
+        transaction_id: transaction_id,
+        instrumentation: instrumentation,
+        headers: headers,
+      ).execute
+    end
+
     private
 
     # Fetch and combine all pages of a paginated API call
@@ -98,26 +118,6 @@ module CompaniesHouse
 
     def make_transaction_id
       SecureRandom.hex(10)
-    end
-
-    def request(resource,
-                path,
-                params = {},
-                transaction_id = make_transaction_id,
-                resource_id = nil,
-                headers = {})
-      Request.new(
-        connection: connection,
-        api_key: @api_key,
-        endpoint: @endpoint,
-        path: path,
-        query: params,
-        resource_type: resource,
-        resource_id: resource_id,
-        transaction_id: transaction_id,
-        instrumentation: instrumentation,
-        headers: headers,
-      ).execute
     end
 
     def configure_instrumentation(instrumentation)
