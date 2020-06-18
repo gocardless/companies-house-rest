@@ -9,3 +9,6 @@ Metrics/MethodLength:
 
 RSpec/NestedGroups:
   Max: 8
+
+Metrics/ParameterLists:
+  Max: 6

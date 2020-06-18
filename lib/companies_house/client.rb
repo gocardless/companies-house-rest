@@ -47,6 +47,17 @@ module CompaniesHouse
       )
     end
 
+    def filing_history_list(id)
+      get_all_pages(:filing_history_list, "company/#{id}/filing-history", id)
+    end
+
+    def filing_history_item(id, transaction_id)
+      request(
+        :filing_history_item,
+        "company/#{id}/filing-history/#{transaction_id}",
+      )
+    end
+
     def company_search(query, items_per_page: nil, start_index: nil)
       request(
         :company_search,
@@ -61,6 +72,26 @@ module CompaniesHouse
         conn.open_timeout = @open_timeout
         conn.read_timeout = @read_timeout
       end
+    end
+
+    def request(resource,
+                path,
+                params = {},
+                transaction_id = make_transaction_id,
+                resource_id = nil,
+                headers = {})
+      Request.new(
+        connection: connection,
+        api_key: @api_key,
+        endpoint: @endpoint,
+        path: path,
+        query: params,
+        resource_type: resource,
+        resource_id: resource_id,
+        transaction_id: transaction_id,
+        instrumentation: instrumentation,
+        headers: headers,
+      ).execute
     end
 
     private
@@ -87,24 +118,6 @@ module CompaniesHouse
 
     def make_transaction_id
       SecureRandom.hex(10)
-    end
-
-    def request(resource,
-                path,
-                params = {},
-                transaction_id = make_transaction_id,
-                resource_id = nil)
-      Request.new(
-        connection: connection,
-        api_key: @api_key,
-        endpoint: @endpoint,
-        path: path,
-        query: params,
-        resource_type: resource,
-        resource_id: resource_id,
-        transaction_id: transaction_id,
-        instrumentation: instrumentation,
-      ).execute
     end
 
     def configure_instrumentation(instrumentation)
