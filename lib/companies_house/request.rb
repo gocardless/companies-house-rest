@@ -83,12 +83,11 @@ module CompaniesHouse
       )
     end
 
-    # rubocop:disable Metrics/CyclomaticComplexity
     def parse(response, resource_type, resource_id)
       case response.code
       when "200"
         JSON[response.body]
-      when "302" then { 'location': response["location"] }
+      when "302" then { location: response["location"] }
       when "401"
         raise CompaniesHouse::AuthenticationError, response
       when "404"
@@ -101,6 +100,5 @@ module CompaniesHouse
         raise CompaniesHouse::APIError.new("Unknown API response", response)
       end
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
   end
 end

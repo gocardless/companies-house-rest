@@ -37,7 +37,7 @@ module CompaniesHouse
     def officers(id)
       get_all_pages(:officers, "company/#{id}/officers", id)
     end
-    
+
     def charges(id)
       get_all_pages(:charges, "company/#{id}/charges", id)
     end
@@ -78,6 +78,7 @@ module CompaniesHouse
       end
     end
 
+    # rubocop:disable Metrics/ParameterLists
     def request(resource,
                 path,
                 params = {},
@@ -97,6 +98,7 @@ module CompaniesHouse
         headers: headers,
       ).execute
     end
+    # rubocop:enable Metrics/ParameterLists
 
     private
 

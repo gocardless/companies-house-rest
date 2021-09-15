@@ -3,12 +3,12 @@
 require "spec_helper"
 require "json"
 
+# rubocop:disable RSpec/FilePath
 describe CompaniesHouse::Client do
   before { WebMock.disable_net_connect! }
 
+  include_context "test client"
   describe "#charges" do
-    include_context "test client"
-
     subject(:response) { client.charges(company_id) }
 
     let(:rest_path) { "company/#{company_id}/charges" }
@@ -120,3 +120,4 @@ describe CompaniesHouse::Client do
     end
   end
 end
+# rubocop:enable RSpec/FilePath
