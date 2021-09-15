@@ -38,6 +38,10 @@ module CompaniesHouse
       get_all_pages(:officers, "company/#{id}/officers", id)
     end
 
+    def charges(id)
+      get_all_pages(:charges, "company/#{id}/charges", id)
+    end
+
     def persons_with_significant_control(id, register_view: false)
       get_all_pages(
         :persons_with_significant_control,
@@ -74,6 +78,7 @@ module CompaniesHouse
       end
     end
 
+    # rubocop:disable Metrics/ParameterLists
     def request(resource,
                 path,
                 params = {},
@@ -93,6 +98,7 @@ module CompaniesHouse
         headers: headers,
       ).execute
     end
+    # rubocop:enable Metrics/ParameterLists
 
     private
 

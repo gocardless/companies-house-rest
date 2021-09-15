@@ -105,6 +105,14 @@ key from the
 [officerList](https://developer.companieshouse.gov.uk/api/docs/company/company_number/officers/officerList-resource.html)
 resource(s) which it reads.
 
+### .charges
+This method implements the [charges](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/reference/charges/list)
+API. It will make one or more requests against this API, as necessary, to obtain
+the full list of company charges. It returns only the values under the `items`
+key from the
+[chargeList](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/resources/chargelist)
+resource(s) which it reads.
+
 ### .company_search
 This method implements the [searchCompanies](https://developer.companieshouse.gov.uk/api/docs/search/companies/companysearch.html)
 API and returns the list of [companySearch](https://developer.companieshouse.gov.uk/api/docs/search-overview/CompanySearch-resource.html)

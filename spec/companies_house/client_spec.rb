@@ -76,9 +76,8 @@ describe CompaniesHouse::Client do
     end
   end
 
+  include_context "test client"
   describe "#company" do
-    include_context "test client"
-
     subject(:response) { client.company(company_id) }
 
     let(:request_method) { "company" }
@@ -106,9 +105,8 @@ describe CompaniesHouse::Client do
     end
   end
 
+  include_context "test client"
   describe "#officers" do
-    include_context "test client"
-
     subject(:response) { client.officers(company_id) }
 
     let(:rest_path) { "company/#{company_id}/officers" }
@@ -220,9 +218,8 @@ describe CompaniesHouse::Client do
     end
   end
 
+  include_context "test client"
   describe "#persons_with_significant_control" do
-    include_context "test client"
-
     subject(:response) do
       client.persons_with_significant_control(company_id, register_view: register_view)
     end
@@ -387,9 +384,8 @@ describe CompaniesHouse::Client do
     end
   end
 
+  include_context "test client"
   describe "#filing_history_list" do
-    include_context "test client"
-
     subject(:response) do
       client.filing_history_list(company_id)
     end
@@ -468,9 +464,8 @@ describe CompaniesHouse::Client do
     end
   end
 
+  include_context "test client"
   describe "#filing_history_item" do
-    include_context "test client"
-
     subject(:response) do
       client.filing_history_item(company_id, transaction_id)
     end
