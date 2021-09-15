@@ -37,6 +37,10 @@ module CompaniesHouse
     def officers(id)
       get_all_pages(:officers, "company/#{id}/officers", id)
     end
+    
+    def charges(id)
+      get_all_pages(:charges, "company/#{id}/charges", id)
+    end
 
     def persons_with_significant_control(id, register_view: false)
       get_all_pages(
