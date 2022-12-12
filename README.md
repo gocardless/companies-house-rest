@@ -13,6 +13,7 @@ see the gem [companies-house-gateway](https://github.com/gocardless/companies-ho
 (Monthly subscription [fees](http://xmlgw.companieshouse.gov.uk/CHDpriceList.shtml), and other fees, may apply.)
 
 Quick start:
+
 * Register an account via the `Sign In / Register` link
 [on the CompaniesHouse Developers website](https://developer.companieshouse.gov.uk/api/docs/)
 * Register an API key at [Your Applications](https://developer.companieshouse.gov.uk/developer/applications)
@@ -20,8 +21,8 @@ Quick start:
 
 ``` shell
 export COMPANIES_HOUSE_API_KEY=YOUR_API_KEY_HERE
-
 ```
+
 * Install `companies-house-rest` through [RubyGems](https://rubygems.org/gems/companies-house-rest)
 * Create and use a client:
 
@@ -31,8 +32,8 @@ client = CompaniesHouse::Client.new(api_key: ENV['COMPANIES_HOUSE_API_KEY'])
 profile = client.company('07495895')
 ```
 
-
 ## Overview
+
 This gem is meant to provide a simple synchronous API to look up company profile
 information and company officers. The data returned is parsed JSON.
 
@@ -76,6 +77,7 @@ hash are:
 | `:instrumentation` | Optional. Instruments the request/response (see Instrumentation for details) |
 
 ## Instrumentation
+
 By default, no instrumentation is being applied.
 If you are using Rails or the `ActiveSupport` gem, instrumentation will happen automatically via ![ActiveSupport::Notifications](https://api.rubyonrails.org/classes/ActiveSupport/Notifications.html)
 
@@ -93,11 +95,13 @@ The endpoints currently implemented by the gem are:
 | `.company_search(query, items_per_page: nil, start_index: nil)` | `GET /search/companies`                 | Retrieves a list of companies that match the given query. |
 
 ### .company
+
 This method implements the [readCompanyProfile](https://developer.companieshouse.gov.uk/api/docs/company/company_number/readCompanyProfile.html)
 API and returns the full [companyProfile](https://developer.companieshouse.gov.uk/api/docs/company/company_number/companyProfile-resource.html)
 resource.
 
 ### .officers
+
 This method implements the [officersList](https://developer.companieshouse.gov.uk/api/docs/company/company_number/officers/officerList.html)
 API. It will make one or more requests against this API, as necessary, to obtain
 the full list of company officers. It returns only the values under the `items`
@@ -106,23 +110,28 @@ key from the
 resource(s) which it reads.
 
 ### .company_search
+
 This method implements the [searchCompanies](https://developer.companieshouse.gov.uk/api/docs/search/companies/companysearch.html)
 API and returns the list of [companySearch](https://developer.companieshouse.gov.uk/api/docs/search-overview/CompanySearch-resource.html)
 resources that match the given query. The `items_per_page` and `start_index` parameters are optional.
 
 ### .filing_history_list
+
 This method implements the [filingHistoryList](https://developer.companieshouse.gov.uk/api/docs/company/company_number/filing-history/getFilingHistoryList.html) API and returns the full [filingHistoryList](https://developer.companieshouse.gov.uk/api/docs/company/company_number/filing-history/filingHistoryList-resource.html) resource.
 
 ### .filing_history_item
+
 This method implements the [filingHistoryItem](https://developer.companieshouse.gov.uk/api/docs/company/company_number/filing-history/transaction_id/getFilingHistoryItem.html) API and returns the full
 [filingHistoryItem](https://developer.companieshouse.gov.uk/api/docs/company/company_number/filing-history/filingHistoryItem-resource.html) resource.
 
 ### Other API Methods
+
 While there are other resources exposed by the
 [Companies House API](https://developer.companieshouse.gov.uk/api/docs/index.html),
 this gem does not implement access to these resources at this time.
 
 ## Error Handling
+
 If a request to the Companies House API encounters an HTTP status other than
 `200 OK`, it will raise an instance of `CompaniesHouse::APIError` instead of
 returning response data. The error will have the following fields:
@@ -131,7 +140,6 @@ returning response data. The error will have the following fields:
 | ---------- | ----------- |
 | `response` | The Net::HTTP response object from the failed API call. |
 | `status`   | A string containing the response status code. |
-
 
 Certain API responses will raise an instance of a more specific subclass of
 `CompaniesHouse::APIError`:
@@ -157,7 +165,6 @@ To get started:
 ``` shell
 bundle install --path vendor
 ```
-
 
 To run all tests and Rubocop:
 
