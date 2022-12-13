@@ -31,7 +31,12 @@ module CompaniesHouse
     end
 
     def company(id)
-      request(:company, "company/#{id}", {}, make_transaction_id, id)
+      request(
+        resource: :company,
+        path: "company/#{id}",
+        params: {},
+        resource_id: id,
+      )
     end
 
     def officers(id)
@@ -53,16 +58,16 @@ module CompaniesHouse
 
     def filing_history_item(id, transaction_id)
       request(
-        :filing_history_item,
-        "company/#{id}/filing-history/#{transaction_id}",
+        resource: :filing_history_item,
+        path: "company/#{id}/filing-history/#{transaction_id}",
       )
     end
 
     def company_search(query, items_per_page: nil, start_index: nil)
       request(
-        :company_search,
-        "search/companies",
-        { q: query, items_per_page: items_per_page, start_index: start_index }.compact,
+        resource: :company_search,
+        path: "search/companies",
+        params: { q: query, items_per_page: items_per_page, start_index: start_index }.compact,
       )
     end
 
@@ -74,14 +79,14 @@ module CompaniesHouse
       end
     end
 
-    # Should this be changed to use kwargs to avoid the need to disable this cop?
-    # rubocop:disable Metrics/ParameterLists
-    def request(resource,
-                path,
-                params = {},
-                transaction_id = make_transaction_id,
-                resource_id = nil,
-                headers = {})
+    private
+
+    def request(resource:,
+                path:,
+                params: {},
+                transaction_id: make_transaction_id,
+                resource_id: nil,
+                headers: {})
       Request.new(
         connection: connection,
         api_key: @api_key,
@@ -95,9 +100,6 @@ module CompaniesHouse
         headers: headers,
       ).execute
     end
-    # rubocop:enable Metrics/ParameterLists
-
-    private
 
     # Fetch and combine all pages of a paginated API call
     def get_all_pages(resource, path, id, query = {})
@@ -106,7 +108,13 @@ module CompaniesHouse
       xid = make_transaction_id
 
       loop do
-        page = request(resource, path, query.merge(start_index: offset), xid, id)
+        page = request(
+          resource: resource,
+          path: path,
+          params: query.merge(start_index: offset),
+          transaction_id: xid,
+          resource_id: id,
+        )
         new_items = page["items"]
         total = page["total_results"] || new_items.count
 
