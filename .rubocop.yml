@@ -3,7 +3,7 @@ inherit_gem:
 
 AllCops:
   NewCops: enable
-  TargetRubyVersion: 2.5
+  TargetRubyVersion: 3.0
 
 Metrics/MethodLength:
   Max: 15
