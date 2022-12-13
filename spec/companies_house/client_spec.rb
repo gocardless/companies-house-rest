@@ -308,11 +308,12 @@ describe CompaniesHouse::Client do
   end
 
   describe "#persons_with_significant_control_statements" do
-    include_context "test client"
-
     subject(:response) do
-      client.persons_with_significant_control_statements(company_id, register_view: register_view)
+      client.persons_with_significant_control_statements(company_id,
+                                                         register_view: register_view)
     end
+
+    include_context "test client"
 
     let(:rest_path) do
       "company/#{company_id}/persons-with-significant-control-statements" \
