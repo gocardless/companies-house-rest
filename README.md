@@ -1,6 +1,6 @@
 # CompaniesHouse::Client
 
-[![CircleCI](https://circleci.com/gh/gocardless/companies-house-rest.svg?style=svg)](https://circleci.com/gh/gocardless/companies-house-rest)
+[![GH Actions](https://github.com/gocardless/companies-house-rest/actions/workflows/main.yml/badge.svg)](https://github.com/gocardless/companies-house-rest/actions)
 
 This Gem implements an API client for the Companies House REST API. It can be
 used to look up information about companies registered in the United Kingdom.
