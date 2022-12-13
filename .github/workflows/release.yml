@@ -1,0 +1,22 @@
+name: Publish gem to GitHub package registry
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Checkout repo containing common GitHub action
+        uses: actions/checkout@v2
+        with:
+          repository: gocardless/publish-internal-gem
+          ssh-key: ${{ secrets.HACK_RB_DEPLOY_KEY }}
+          path: ./.github/workflows/publish-internal-gem
+      - name: Publish Gem
+        uses: ./.github/workflows/publish-internal-gem
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}

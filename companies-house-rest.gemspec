@@ -22,6 +22,12 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
   spec.required_ruby_version = ">= 3.0.2"
 
+  spec.metadata              = {
+    "github_repo" => "ssh://github.com/gocardless/companies-house-rest",
+    "allowed_push_host" => "https://rubygems.pkg.github.com/gocardless",
+    "rubygems_mfa_required" => "true",
+  }
+
   spec.add_runtime_dependency "dry-struct", "~> 1"
 
   spec.add_development_dependency "activesupport", ">= 4.2", "< 7"
