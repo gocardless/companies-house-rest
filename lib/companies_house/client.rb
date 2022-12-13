@@ -24,10 +24,18 @@ module CompaniesHouse
       @read_timeout = config[:read_timeout] || 60
       @instrumentation = configure_instrumentation(config[:instrumentation])
       raise ArgumentError, "HTTP is not supported" if @endpoint.scheme != "https"
+
+      # Clear stale thread-local connection object if necessary - its lifetime should
+      # match the lifetime of the client object
+      Thread.current[:companies_house_client_connection] = nil
     end
 
     def end_connection
-      @connection.finish if @connection&.started?
+      return if Thread.current[:companies_house_client_connection].nil?
+      return unless Thread.current[:companies_house_client_connection].started?
+
+      Thread.current[:companies_house_client_connection].finish
+      Thread.current[:companies_house_client_connection] = nil
     end
 
     def company(id)
@@ -74,11 +82,12 @@ module CompaniesHouse
     end
 
     def connection
-      @connection ||= Net::HTTP.new(endpoint.host, endpoint.port).tap do |conn|
-        conn.use_ssl = true
-        conn.open_timeout = @open_timeout
-        conn.read_timeout = @read_timeout
-      end
+      Thread.current[:companies_house_client_connection] ||=
+        Net::HTTP.new(endpoint.host, endpoint.port).tap do |conn|
+          conn.use_ssl = true
+          conn.open_timeout = @open_timeout
+          conn.read_timeout = @read_timeout
+        end
     end
 
     private
