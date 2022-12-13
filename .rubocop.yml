@@ -2,6 +2,7 @@ inherit_gem:
   gc_ruboconfig: rubocop.yml
 
 AllCops:
+  NewCops: enable
   TargetRubyVersion: 2.5
 
 Metrics/MethodLength:

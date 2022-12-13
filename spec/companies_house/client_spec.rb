@@ -52,7 +52,7 @@ describe CompaniesHouse::Client do
     end
 
     it "can set the ActiveSupport instrumenter if constant is defined" do
-      class_double("ActiveSupport::Notifications").as_stubbed_const
+      class_double(ActiveSupport::Notifications).as_stubbed_const
       client = described_class.new(api_key: "key")
       expect(client.instrumentation).to eq(Instrumentation::ActiveSupport)
     end
@@ -77,9 +77,9 @@ describe CompaniesHouse::Client do
   end
 
   describe "#company" do
-    include_context "test client"
-
     subject(:response) { client.company(company_id) }
+
+    include_context "test client"
 
     let(:request_method) { "company" }
     let(:rest_path) { "company/#{company_id}" }
@@ -107,9 +107,9 @@ describe CompaniesHouse::Client do
   end
 
   describe "#officers" do
-    include_context "test client"
-
     subject(:response) { client.officers(company_id) }
+
+    include_context "test client"
 
     let(:rest_path) { "company/#{company_id}/officers" }
     let(:request_method) { "officers" }
@@ -221,11 +221,11 @@ describe CompaniesHouse::Client do
   end
 
   describe "#persons_with_significant_control" do
-    include_context "test client"
-
     subject(:response) do
       client.persons_with_significant_control(company_id, register_view: register_view)
     end
+
+    include_context "test client"
 
     let(:rest_path) do
       "company/#{company_id}/persons-with-significant-control" \
@@ -388,11 +388,11 @@ describe CompaniesHouse::Client do
   end
 
   describe "#filing_history_list" do
-    include_context "test client"
-
     subject(:response) do
       client.filing_history_list(company_id)
     end
+
+    include_context "test client"
 
     before do
       stub_request(:get, "#{example_endpoint}/#{rest_path}").
@@ -469,11 +469,11 @@ describe CompaniesHouse::Client do
   end
 
   describe "#filing_history_item" do
-    include_context "test client"
-
     subject(:response) do
       client.filing_history_item(company_id, transaction_id)
     end
+
+    include_context "test client"
 
     let(:request_method) { "filing_history_item" }
     let(:transaction_id) { "abcdef-12345" }
