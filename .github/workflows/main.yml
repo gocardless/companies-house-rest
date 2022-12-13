@@ -25,5 +25,5 @@ jobs:
         with:
           name: test-results
           path: /tmp/test-results
-      - name: Robocop
+      - name: Rubocop
         run: bundle exec rubocop
