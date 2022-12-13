@@ -52,6 +52,8 @@ describe CompaniesHouse::Client do
     end
 
     it "can set the ActiveSupport instrumenter if constant is defined" do
+      require "active_support"
+
       class_double(ActiveSupport::Notifications).as_stubbed_const
       client = described_class.new(api_key: "key")
       expect(client.instrumentation).to eq(Instrumentation::ActiveSupport)
