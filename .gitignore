@@ -3,3 +3,8 @@
 .DS_Store
 *.swp
 Gemfile.lock
+
+# rbenv gemset configuration and gemset folder
+.rbenv-gemsets
+.companies-house-rest-gemset
+

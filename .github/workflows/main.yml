@@ -1,0 +1,29 @@
+name: main
+on: push
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby_version: [3.0, 3.1]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby_version }}
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+      - name: Rspec
+        run: |
+          bundle exec rspec --profile 10 \
+            --format RspecJunitFormatter \
+            --out /tmp/test-results/rspec.xml \
+            --format progress \
+            spec
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: test-results
+          path: /tmp/test-results
+      - name: Robocop
+        run: bundle exec rubocop

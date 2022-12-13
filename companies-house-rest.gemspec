@@ -20,15 +20,16 @@ Gem::Specification.new do |spec|
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
-  spec.required_ruby_version = ">= 2.5.5"
+  spec.required_ruby_version = ">= 3.0.2"
 
   spec.add_runtime_dependency "dry-struct", "~> 1"
 
   spec.add_development_dependency "activesupport", ">= 4.2", "< 7"
-  spec.add_development_dependency "gc_ruboconfig", "~> 2.4"
+  spec.add_development_dependency "gc_ruboconfig", "~> 3.6"
   spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "rspec", "~> 3.5"
   spec.add_development_dependency "rspec_junit_formatter", "~> 0.4.1"
   spec.add_development_dependency "timecop", "~> 0.8"
   spec.add_development_dependency "webmock", "~> 3.0"
+  spec.metadata["rubygems_mfa_required"] = "true"
 end

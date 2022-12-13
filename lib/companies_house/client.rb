@@ -74,6 +74,8 @@ module CompaniesHouse
       end
     end
 
+    # Should this be changed to use kwargs to avoid the need to disable this cop?
+    # rubocop:disable Metrics/ParameterLists
     def request(resource,
                 path,
                 params = {},
@@ -93,6 +95,7 @@ module CompaniesHouse
         headers: headers,
       ).execute
     end
+    # rubocop:enable Metrics/ParameterLists
 
     private
 
