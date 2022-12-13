@@ -307,6 +307,92 @@ describe CompaniesHouse::Client do
     end
   end
 
+  describe "#persons_with_significant_control_statements" do
+    subject(:response) do
+      client.persons_with_significant_control_statements(company_id,
+                                                         register_view: register_view)
+    end
+
+    include_context "test client"
+
+    let(:rest_path) do
+      "company/#{company_id}/persons-with-significant-control-statements" \
+        "?register_view=#{register_view}"
+    end
+    let(:request_method) { "persons_with_significant_control_statements" }
+    let(:register_view) { true }
+
+    context "when all results are on a single page" do
+      let(:single_page) do
+        {
+          items_per_page: 2,
+          total_results: 2,
+          start_index: 0,
+          items: %w[item1 item2],
+        }.to_json
+      end
+
+      before do
+        stub_request(:get, "#{example_endpoint}/#{rest_path}").
+          with(
+            basic_auth: [api_key, ""],
+            query: { "start_index" => 0, register_view: register_view },
+          ).to_return(body: single_page, status: status)
+      end
+
+      it "returns items from the one, single page" do
+        expect(response).to eq(%w[item1 item2])
+      end
+
+      context "with register_view: false" do
+        let(:register_view) { false }
+
+        it "returns items from the one, single page" do
+          expect(response).to eq(%w[item1 item2])
+        end
+      end
+    end
+
+    context "when results are spread across several pages" do
+      let(:page1) do
+        {
+          items_per_page: 1,
+          total_results: 2,
+          start_index: 0,
+          items: ["item1"],
+        }.to_json
+      end
+
+      let(:page2) do
+        {
+          items_per_page: 1,
+          total_results: 2,
+          start_index: 1,
+          items: ["item2"],
+        }.to_json
+      end
+
+      before do
+        stub_request(:get, "#{example_endpoint}/#{rest_path}").
+          with(
+            basic_auth: [api_key, ""],
+            query: { "start_index" => 0, register_view: true },
+          ).
+          to_return(body: page1, status: status)
+        stub_request(:get, "#{example_endpoint}/#{rest_path}").
+          with(
+            basic_auth: [api_key, ""],
+            query: { "start_index" => 1, register_view: true },
+          ).
+          to_return(body: page2, status: status)
+      end
+
+      it "returns items from all pages" do
+        expect(response).to eq(%w[item1 item2])
+      end
+    end
+  end
+
   describe "#company_search" do
     include_context "test client"
 

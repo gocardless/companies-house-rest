@@ -60,6 +60,15 @@ module CompaniesHouse
       )
     end
 
+    def persons_with_significant_control_statements(id, register_view: false)
+      get_all_pages(
+        :persons_with_significant_control_statements,
+        "company/#{id}/persons-with-significant-control-statements",
+        id,
+        register_view: register_view,
+      )
+    end
+
     def filing_history_list(id)
       get_all_pages(:filing_history_list, "company/#{id}/filing-history", id)
     end
