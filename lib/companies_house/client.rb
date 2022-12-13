@@ -60,7 +60,7 @@ module CompaniesHouse
       )
     end
 
-    def persons_with_significant_control_statements(id, register_view: false)
+    def persons_with_significant_control_statements(id, register_view: false) # rubocop:disable Layout/LineLength
       get_all_pages(
         :persons_with_significant_control_statements,
         "company/#{id}/persons-with-significant-control-statements",
