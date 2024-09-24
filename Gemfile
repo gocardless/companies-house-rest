@@ -6,7 +6,7 @@ source 'https://rubygems.org'
 gemspec
 
 # Development dependencies
-gem "activesupport", ">= 4.2", "< 7"
+gem "activesupport", ">= 4.2", "< 8"
 gem "gc_ruboconfig", "~> 5.0"
 gem "rake", "~> 13.0"
 gem "rspec", "~> 3.5"
