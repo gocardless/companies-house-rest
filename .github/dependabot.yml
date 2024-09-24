@@ -7,8 +7,3 @@ updates:
     interval: daily
   open-pull-requests-limit: 10
   insecure-external-code-execution: allow
-- package-ecosystem: docker
-  directory: "/"
-  schedule:
-    interval: daily
-  open-pull-requests-limit: 10
