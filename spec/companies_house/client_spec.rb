@@ -6,6 +6,28 @@ require "json"
 describe CompaniesHouse::Client do
   before { WebMock.disable_net_connect! }
 
+  shared_context "multiple pages" do
+    # rubocop:disable RSpec/IndexedLet
+    let(:page1) do
+      {
+        items_per_page: 1,
+        total_results: 2,
+        start_index: 0,
+        items: ["item1"],
+      }.to_json
+    end
+
+    let(:page2) do
+      {
+        items_per_page: 1,
+        total_results: 2,
+        start_index: 1,
+        items: ["item2"],
+      }.to_json
+    end
+    # rubocop:enable RSpec/IndexedLet
+  end
+
   describe "#initialize" do
     include_context "test credentials"
     describe "with an API key" do
@@ -142,23 +164,7 @@ describe CompaniesHouse::Client do
     end
 
     context "when results are spread across several pages" do
-      let(:page1) do
-        {
-          items_per_page: 1,
-          total_results: 2,
-          start_index: 0,
-          items: ["item1"],
-        }.to_json
-      end
-
-      let(:page2) do
-        {
-          items_per_page: 1,
-          total_results: 2,
-          start_index: 1,
-          items: ["item2"],
-        }.to_json
-      end
+      include_context "multiple pages"
 
       before do
         stub_request(:get, "#{example_endpoint}/#{rest_path}").
@@ -268,23 +274,7 @@ describe CompaniesHouse::Client do
     end
 
     context "when results are spread across several pages" do
-      let(:page1) do
-        {
-          items_per_page: 1,
-          total_results: 2,
-          start_index: 0,
-          items: ["item1"],
-        }.to_json
-      end
-
-      let(:page2) do
-        {
-          items_per_page: 1,
-          total_results: 2,
-          start_index: 1,
-          items: ["item2"],
-        }.to_json
-      end
+      include_context "multiple pages"
 
       before do
         stub_request(:get, "#{example_endpoint}/#{rest_path}").
@@ -354,23 +344,7 @@ describe CompaniesHouse::Client do
     end
 
     context "when results are spread across several pages" do
-      let(:page1) do
-        {
-          items_per_page: 1,
-          total_results: 2,
-          start_index: 0,
-          items: ["item1"],
-        }.to_json
-      end
-
-      let(:page2) do
-        {
-          items_per_page: 1,
-          total_results: 2,
-          start_index: 1,
-          items: ["item2"],
-        }.to_json
-      end
+      include_context "multiple pages"
 
       before do
         stub_request(:get, "#{example_endpoint}/#{rest_path}").
@@ -517,23 +491,7 @@ describe CompaniesHouse::Client do
     end
 
     context "when results are spread across several pages" do
-      let(:page1) do
-        {
-          items_per_page: 1,
-          total_results: 2,
-          start_index: 0,
-          items: ["item1"],
-        }.to_json
-      end
-
-      let(:page2) do
-        {
-          items_per_page: 1,
-          total_results: 2,
-          start_index: 1,
-          items: ["item2"],
-        }.to_json
-      end
+      include_context "multiple pages"
 
       before do
         stub_request(:get, "#{example_endpoint}/#{rest_path}").

@@ -35,7 +35,7 @@ module CompaniesHouse
     attribute :instrumentation, Dry.Types.Interface(:publish)
 
     def initialize(args)
-      super(args)
+      super
 
       @uri = URI.join(endpoint, path)
       @uri.query = URI.encode_www_form(query)
