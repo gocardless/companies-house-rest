@@ -1,22 +1,4 @@
 version: 2
-registries:
-  docker-registry-eu-gcr-io:
-    type: docker-registry
-    url: https://eu.gcr.io
-    username: _json_key
-    password: "${{secrets.DOCKER_REGISTRY_EU_GCR_IO_PASSWORD}}"
-
-  github-org-private:
-    type: git
-    url: https://github.com
-    username: x-access-token
-    password: "${{secrets.GIT_HUB_ROBOT_TOKEN}}"
-
-  github-org-ruby-private:
-    type: rubygems-server
-    url: https://rubygems.pkg.github.com/gocardless
-    username: gocardless-robot-readonly
-    password: "${{secrets.GIT_HUB_ROBOT_TOKEN}}"
 
 updates:
 - package-ecosystem: bundler
@@ -25,13 +7,8 @@ updates:
     interval: daily
   open-pull-requests-limit: 10
   insecure-external-code-execution: allow
-  registries:
-    - github-org-private
-    - github-org-ruby-private
 - package-ecosystem: docker
   directory: "/"
   schedule:
     interval: daily
   open-pull-requests-limit: 10
-  registries:
-    - docker-registry-eu-gcr-io
