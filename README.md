@@ -13,19 +13,19 @@ see the gem [companies-house-gateway](https://github.com/gocardless/companies-ho
 
 Quick start:
 
-* Register an account via the `Sign In / Register` link
-[on the CompaniesHouse Developers website](https://developer.company-information.service.gov.uk/)
-* Register an API key at [Your Applications](https://developer.company-information.service.gov.uk/manage-applications)
-* Put your API key in an environment variable (not in your code):
+- Register an account via the `Sign In / Register` link
+  [on the CompaniesHouse Developers website](https://developer.company-information.service.gov.uk/)
+- Register an API key at [Your Applications](https://developer.company-information.service.gov.uk/manage-applications)
+- Put your API key in an environment variable (not in your code):
 
-``` shell
+```shell
 export COMPANIES_HOUSE_API_KEY=YOUR_API_KEY_HERE
 ```
 
-* Install `companies-house-rest` through [RubyGems](https://rubygems.org/gems/companies-house-rest)
-* Create and use a client:
+- Install `companies-house-rest` through [RubyGems](https://rubygems.org/gems/companies-house-rest)
+- Create and use a client:
 
-``` ruby
+```ruby
 require 'companies_house/client'
 client = CompaniesHouse::Client.new(api_key: ENV['COMPANIES_HOUSE_API_KEY'])
 profile = client.company('07495895')
@@ -51,11 +51,11 @@ Developers should read
 before using this API, and will note that these guidelines contain several
 instructions regarding API keys:
 
-* Do not embed API keys in your code
-* Do not store API keys in your source tree
-* Restrict API key use by IP address and domain
-* **Regenerate your API keys regularly**
-* Delete API keys when no longer required
+- Do not embed API keys in your code
+- Do not store API keys in your source tree
+- Restrict API key use by IP address and domain
+- **Regenerate your API keys regularly**
+- Delete API keys when no longer required
 
 ## Client Initialization
 
@@ -69,11 +69,11 @@ client = CompaniesHouse::Client.new(config)
 The client is configured by passing a hash to the constructor. The supported keys for this
 hash are:
 
-| Key                | Description |
-| ------------------ | ----------- |
-| `:api_key`         | Required. The API key received after registration. |
+| Key                | Description                                                                        |
+| ------------------ | ---------------------------------------------------------------------------------- |
+| `:api_key`         | Required. The API key received after registration.                                 |
 | `:endpoint`        | Optional. Specifies the base URI for the API (e.g. if using a self-hosted version) |
-| `:instrumentation` | Optional. Instruments the request/response (see Instrumentation for details) |
+| `:instrumentation` | Optional. Instruments the request/response (see Instrumentation for details)       |
 
 ## Instrumentation
 
@@ -87,13 +87,13 @@ Details of the available fields in the response are in the Companies House
 [documentation](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/reference).
 The endpoints currently implemented by the gem are:
 
-| Client Method                                                   | Endpoint                                | Description |
-| --------------------------------------------------------------- | --------------------------------------- | ----------- |
-| `.company(company_number)`                                      | `GET /company/:company_number`          | Retrieves a company profile. |
-| `.officers(company_number)`                                     | `GET /company/:company_number/officers` | Retrieves a list of company officers. |
-| `.company_search(query, items_per_page: nil, start_index: nil)` | `GET /search/companies`                 | Retrieves a list of companies that match the given query. |
-| `.filing_history_list(company_number)`                          | `GET /company/:company_number/filing-history` | Retrieves a list of company filings. |
-| `.filing_history_item(company_number, transaction_id)`          | `GET /company/:company_number/filing-history/:transaction_id` | Retrieves a company filing. |
+| Client Method                                                   | Endpoint                                                      | Description                                               |
+| --------------------------------------------------------------- | ------------------------------------------------------------- | --------------------------------------------------------- |
+| `.company(company_number)`                                      | `GET /company/:company_number`                                | Retrieves a company profile.                              |
+| `.officers(company_number)`                                     | `GET /company/:company_number/officers`                       | Retrieves a list of company officers.                     |
+| `.company_search(query, items_per_page: nil, start_index: nil)` | `GET /search/companies`                                       | Retrieves a list of companies that match the given query. |
+| `.filing_history_list(company_number)`                          | `GET /company/:company_number/filing-history`                 | Retrieves a list of company filings.                      |
+| `.filing_history_item(company_number, transaction_id)`          | `GET /company/:company_number/filing-history/:transaction_id` | Retrieves a company filing.                               |
 
 ### .company
 
@@ -138,22 +138,22 @@ If a request to the Companies House API encounters an HTTP status other than
 `200 OK`, it will raise an instance of `CompaniesHouse::APIError` instead of
 returning response data. The error will have the following fields:
 
-| Field      | Description |
-| ---------- | ----------- |
+| Field      | Description                                             |
+| ---------- | ------------------------------------------------------- |
 | `response` | The Net::HTTP response object from the failed API call. |
-| `status`   | A string containing the response status code. |
+| `status`   | A string containing the response status code.           |
 
 Certain API responses will raise an instance of a more specific subclass of
 `CompaniesHouse::APIError`:
 
-| Status | Error                                 | Description |
-| ------ | ------------------------------------- | ----------- |
-| 401    | `CompaniesHouse::AuthenticationError` | Authentication error (invalid API key) |
-| 404    | `CompaniesHouse::NotFoundError`       | Not Found. (No record of the company is available.) |
+| Status | Error                                 | Description                                                                                                                  |
+| ------ | ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| 401    | `CompaniesHouse::AuthenticationError` | Authentication error (invalid API key)                                                                                       |
+| 404    | `CompaniesHouse::NotFoundError`       | Not Found. (No record of the company is available.)                                                                          |
 | 429    | `CompaniesHouse::RateLimitError`      | Application is being [rate limited](https://developer.companieshouse.gov.uk/api/docs/index/gettingStarted/rateLimiting.html) |
 
 The client will not catch any other errors which may occur, such as
-errors involving  network connections (e.g. `Errno::ECONNRESET`).
+errors involving network connections (e.g. `Errno::ECONNRESET`).
 
 ## Development
 
@@ -164,7 +164,7 @@ Bug reports and pull requests are welcome on this project's
 
 To get started:
 
-``` shell
+```shell
 bundle install --path vendor
 ```
 

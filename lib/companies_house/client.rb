@@ -80,12 +80,13 @@ module CompaniesHouse
       )
     end
 
-    def company_search(query, items_per_page: nil, start_index: nil)
+    def company_search(query, items_per_page: nil, start_index: nil, restrictions: nil)
       request(
         resource: :company_search,
         path: "search/companies",
         params: {
-          q: query, items_per_page: items_per_page, start_index: start_index
+          q: query, items_per_page: items_per_page, start_index: start_index,
+          restrictions: restrictions
         }.compact,
       )
     end
