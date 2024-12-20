@@ -84,16 +84,27 @@ If you are using Rails or the `ActiveSupport` gem, instrumentation will happen a
 
 Once a client has been initialised, requests can be made to the API.
 Details of the available fields in the response are in the Companies House
-[documentation](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/reference).
+[documentation](https://developer-specs.company-information.service.gov.uk/).
 The endpoints currently implemented by the gem are:
 
-| Client Method                                                   | Endpoint                                                      | Description                                               |
-| --------------------------------------------------------------- | ------------------------------------------------------------- | --------------------------------------------------------- |
-| `.company(company_number)`                                      | `GET /company/:company_number`                                | Retrieves a company profile.                              |
-| `.officers(company_number)`                                     | `GET /company/:company_number/officers`                       | Retrieves a list of company officers.                     |
-| `.company_search(query, items_per_page: nil, start_index: nil)` | `GET /search/companies`                                       | Retrieves a list of companies that match the given query. |
-| `.filing_history_list(company_number)`                          | `GET /company/:company_number/filing-history`                 | Retrieves a list of company filings.                      |
-| `.filing_history_item(company_number, transaction_id)`          | `GET /company/:company_number/filing-history/:transaction_id` | Retrieves a company filing.                               |
+| Client Method                                                                                      | Endpoint                                                                                                       | Description                                                      |
+| -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `.company(company_number)`                                                                         | `GET /company/:company_number`                                                                                 | Retrieves a company profile.                                     |
+| `.officers(company_number)`                                                                        | `GET /company/:company_number/officers`                                                                        | Retrieves a list of company officers.                            |
+| `.company_search(query, items_per_page: nil, start_index: nil, restrictions: nil)`                 | `GET /search/companies`                                                                                        | Retrieves a list of companies that match the given query.        |
+| `.persons_with_significant_control(company_number, register_view: false)`                          | `GET /company/:company_number/persons-with-significant-control`                                                | Retrieves a list of persons with significant control.            |
+| `.persons_with_significant_control_corporate_entity_beneficial_owner(company_number, psc_id)`      | `GET /company/:company_number/persons-with-significant-control/corporate-entity-beneficial-owner/:psc_id`      | Retrieves a corporate entity beneficial owner.                   |
+| `.persons_with_significant_control_corporate_entity(company_number, psc_id)`                       | `GET /company/:company_number/persons-with-significant-control/corporate-entity/:psc_id`                       | Retrieves a corporate entity.                                    |
+| `.persons_with_significant_control_individual_beneficial_owner(company_number, psc_id)`            | `GET /company/:company_number/persons-with-significant-control/individual-beneficial-owner/:psc_id`            | Retrieves an individual beneficial owner.                        |
+| `.persons_with_significant_control_individual(company_number, psc_id)`                             | `GET /company/:company_number/persons-with-significant-control/individual/:psc_id`                             | Retrieves an individual.                                         |
+| `.persons_with_significant_control_legal_person_beneficial_owner(company_number, psc_id)`          | `GET /company/:company_number/persons-with-significant-control/legal-person-beneficial-owner/:psc_id`          | Retrieves a legal person beneficial owner.                       |
+| `.persons_with_significant_control_legal_person(company_number, psc_id)`                           | `GET /company/:company_number/persons-with-significant-control/legal-person/:psc_id`                           | Retrieves a legal person.                                        |
+| `.persons_with_significant_control_super_secure_beneficial_owner(company_number, super_secure_id)` | `GET /company/:company_number/persons-with-significant-control/super-secure-beneficial-owner/:super_secure_id` | Retrieves a super secure beneficial owner.                       |
+| `.persons_with_significant_control_super_secure_person(company_number, super_secure_id)`           | `GET /company/:company_number/persons-with-significant-control/super-secure/:super_secure_id`                  | Retrieves a super secure person.                                 |
+| `.persons_with_significant_control_statements(company_number, register_view: false)`               | `GET /company/:company_number/persons-with-significant-control-statements`                                     | Retrieves a list of persons with significant control statements. |
+| `.persons_with_significant_control_statement(company_number, statement_id)`                        | `GET /company/:company_number/persons-with-significant-control-statements/:statement_id`                       | Retrieves a persons with significant control statement.          |
+| `.filing_history_list(company_number)`                                                             | `GET /company/:company_number/filing-history`                                                                  | Retrieves a list of filing history items.                        |
+| `.filing_history_item(company_number, transaction_id)`                                             | `GET /company/:company_number/filing-history/:transaction_id`                                                  | Retrieves a specific filing history item.                        |
 
 ### .company
 
@@ -114,7 +125,51 @@ resource(s) which it reads.
 
 This method implements the [searchCompanies](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/reference/search/search-companies)
 API and returns the list of [companySearch](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/resources/companysearch)
-resources that match the given query. The `items_per_page` and `start_index` parameters are optional.
+resources that match the given query. The `items_per_page`, `start_index` and `restrictions` parameters are optional.
+
+### .persons_with_significant_control
+
+This method implements the [listPersonsWithSignificantControl](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/reference/persons-with-significant-control/list) API and returns the list of [personsWithSignificantControl](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/resources/list) resources.
+
+### .persons_with_significant_control_corporate_entity_beneficial_owner
+
+This method implements the [getCorporateEntityBeneficialOwner](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/reference/persons-with-significant-control/get-corporate-entity-beneficial-owner) API and returns the [corporateEntityBeneficialOwner](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/resources/corporateentitybeneficialowner) resource.
+
+### .persons_with_significant_control_corporate_entity
+
+This method implements the [getCorporateEntities](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/reference/persons-with-significant-control/get-corporate-entities) API and returns the [corporateEntity](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/resources/corporateentity) resource.
+
+### .persons_with_significant_control_individual_beneficial_owner
+
+This method implements the [getIndividualBeneficialOwner](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/reference/persons-with-significant-control/get-individual-beneficial-owner) API and returns the [individualBeneficialOwner](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/resources/individualbeneficialowner) resource.
+
+### .persons_with_significant_control_individual
+
+This method implements the [getIndividual](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/reference/persons-with-significant-control/get-individual) API and returns the [individual](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/resources/individual) resource.
+
+### .persons_with_significant_control_legal_person_beneficial_owner
+
+This method implements the [getLegalPersonBeneficialOwner](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/reference/persons-with-significant-control/get-legal-person-beneficial-owner) API and returns the [legalPersonBeneficialOwner](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/resources/legalpersonbeneficialowner) resource.
+
+### .persons_with_significant_control_legal_person
+
+This method implements the [getLegalPersons](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/reference/persons-with-significant-control/get-legal-persons) API and returns the [legalPerson](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/resources/legalperson) resource.
+
+### .persons_with_significant_control_super_secure_beneficial_owner
+
+This method implements the [getSuperSecureBeneficialOwner](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/reference/persons-with-significant-control/get-super-secure-beneficial-owner) API and returns the [superSecureBeneficialOwner](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/resources/supersecurebeneficialowner) resource.
+
+### .persons_with_significant_control_super_secure_person
+
+This method implements the [getSuperSecurePerson](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/reference/persons-with-significant-control/get-super-secure-person) API and returns the [superSecure](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/resources/supersecure) resource.
+
+### .persons_with_significant_control_statements
+
+This method implements the [listPersonsWithSignificantControlStatements](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/reference/persons-with-significant-control/list-statements) API and returns the list of [statementList](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/resources/statementlist) resources.
+
+### .persons_with_significant_control_statement
+
+This method implements the [getStatement](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/reference/persons-with-significant-control/get-statement) API and returns the [statement](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/resources/statement) resource.
 
 ### .filing_history_list
 
@@ -146,11 +201,11 @@ returning response data. The error will have the following fields:
 Certain API responses will raise an instance of a more specific subclass of
 `CompaniesHouse::APIError`:
 
-| Status | Error                                 | Description                                                                                                                  |
-| ------ | ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| 401    | `CompaniesHouse::AuthenticationError` | Authentication error (invalid API key)                                                                                       |
-| 404    | `CompaniesHouse::NotFoundError`       | Not Found. (No record of the company is available.)                                                                          |
-| 429    | `CompaniesHouse::RateLimitError`      | Application is being [rate limited](https://developer.companieshouse.gov.uk/api/docs/index/gettingStarted/rateLimiting.html) |
+| Status | Error                                 | Description                                                                                                         |
+| ------ | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| 401    | `CompaniesHouse::AuthenticationError` | Authentication error (invalid API key)                                                                              |
+| 404    | `CompaniesHouse::NotFoundError`       | Not Found. (No record of the company is available.)                                                                 |
+| 429    | `CompaniesHouse::RateLimitError`      | Application is being [rate limited](https://developer-specs.company-information.service.gov.uk/guides/rateLimiting) |
 
 The client will not catch any other errors which may occur, such as
 errors involving network connections (e.g. `Errno::ECONNRESET`).
