@@ -192,7 +192,7 @@ describe CompaniesHouse::Client do
             path: rest_path,
             query: { start_index: 0 },
             response: JSON[page1],
-            status: status.to_s,
+            response_status: status.to_s,
           ),
         ).and_call_original
         expect(client.instrumentation).to receive(:publish).with(
@@ -205,7 +205,7 @@ describe CompaniesHouse::Client do
             path: rest_path,
             query: { start_index: 1 },
             response: JSON[page2],
-            status: status.to_s,
+            response_status: status.to_s,
           ),
         ).and_call_original
 
