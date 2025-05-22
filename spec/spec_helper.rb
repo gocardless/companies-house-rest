@@ -100,7 +100,7 @@ shared_examples "sends one notification" do
       method: :get,
       path: rest_path,
       query: rest_query,
-      status: status.to_s,
+      response_status: status.to_s,
     }
 
     if error_class

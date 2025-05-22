@@ -50,7 +50,7 @@ module CompaniesHouse
     def execute
       @started = Time.now.utc
       response = request_resource(@uri)
-      @notification_payload[:status] = response.code
+      @notification_payload[:response_status] = response.code
 
       begin
         @notification_payload[:response] = parse(response, resource_type, resource_id)
