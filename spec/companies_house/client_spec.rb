@@ -410,6 +410,7 @@ describe CompaniesHouse::Client do
           query,
           items_per_page: items_per_page,
           start_index: start_index,
+          restrictions: restrictions,
         )
       end
 
@@ -418,16 +419,18 @@ describe CompaniesHouse::Client do
           q: query,
           items_per_page: items_per_page,
           start_index: start_index,
+          restrictions: restrictions,
         }
       end
       let(:items_per_page) { 5 }
       let(:start_index) { 3 }
+      let(:restrictions) { "active-companies" }
 
       before do
         stub_request(
           :get,
           "#{example_endpoint}/#{rest_path}?items_per_page=#{items_per_page}\
-&q=#{query}&start_index=#{start_index}",
+&q=#{query}&start_index=#{start_index}&restrictions=#{restrictions}",
         ).
           with(basic_auth: [api_key, ""]).
           to_return(body: '{"companies": "data"}', status: status)
