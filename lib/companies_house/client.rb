@@ -60,12 +60,75 @@ module CompaniesHouse
       )
     end
 
+    def persons_with_significant_control_corporate_entity_beneficial_owner(id, psc_id)
+      request(
+        resource: :persons_with_significant_control_corporate_entity_beneficial_owner,
+        path: "company/#{id}/persons-with-significant-control/corporate-entity-beneficial-owner/#{psc_id}",
+      )
+    end
+
+    def persons_with_significant_control_corporate_entity(id, psc_id)
+      request(
+        resource: :persons_with_significant_control_corporate_entity,
+        path: "company/#{id}/persons-with-significant-control/corporate-entity/#{psc_id}",
+      )
+    end
+
+    def persons_with_significant_control_individual_beneficial_owner(id, psc_id)
+      request(
+        resource: :persons_with_significant_control_individual_beneficial_owner,
+        path: "company/#{id}/persons-with-significant-control/individual-beneficial-owner/#{psc_id}",
+      )
+    end
+
+    def persons_with_significant_control_individual(id, psc_id)
+      request(
+        resource: :persons_with_significant_control_individual,
+        path: "company/#{id}/persons-with-significant-control/individual/#{psc_id}",
+      )
+    end
+
+    def persons_with_significant_control_legal_person_beneficial_owner(id, psc_id)
+      request(
+        resource: :persons_with_significant_control_legal_person_beneficial_owner,
+        path: "company/#{id}/persons-with-significant-control/legal-person-beneficial-owner/#{psc_id}",
+      )
+    end
+
+    def persons_with_significant_control_legal_person(id, psc_id)
+      request(
+        resource: :persons_with_significant_control_legal_person,
+        path: "company/#{id}/persons-with-significant-control/legal-person/#{psc_id}",
+      )
+    end
+
+    def persons_with_significant_control_super_secure_beneficial_owner(id, super_secure_id)
+      request(
+        resource: :persons_with_significant_control_super_secure_beneficial_owner,
+        path: "company/#{id}/persons-with-significant-control/super-secure-beneficial-owner/#{super_secure_id}",
+      )
+    end
+
+    def persons_with_significant_control_super_secure_person(id, super_secure_id)
+      request(
+        resource: :persons_with_significant_control_super_secure_person,
+        path: "company/#{id}/persons-with-significant-control/super-secure/#{super_secure_id}",
+      )
+    end
+
     def persons_with_significant_control_statements(id, register_view: false)
       get_all_pages(
         :persons_with_significant_control_statements,
         "company/#{id}/persons-with-significant-control-statements",
         id,
         register_view: register_view,
+      )
+    end
+
+    def persons_with_significant_control_statement(id, statement_id)
+      request(
+        resource: :persons_with_significant_control_statement,
+        path: "company/#{id}/persons-with-significant-control-statements/#{statement_id}",
       )
     end
 
@@ -80,12 +143,13 @@ module CompaniesHouse
       )
     end
 
-    def company_search(query, items_per_page: nil, start_index: nil)
+    def company_search(query, items_per_page: nil, start_index: nil, restrictions: nil)
       request(
         resource: :company_search,
         path: "search/companies",
         params: {
-          q: query, items_per_page: items_per_page, start_index: start_index
+          q: query, items_per_page: items_per_page, start_index: start_index,
+          restrictions: restrictions
         }.compact,
       )
     end

@@ -410,6 +410,7 @@ describe CompaniesHouse::Client do
           query,
           items_per_page: items_per_page,
           start_index: start_index,
+          restrictions: restrictions,
         )
       end
 
@@ -418,16 +419,18 @@ describe CompaniesHouse::Client do
           q: query,
           items_per_page: items_per_page,
           start_index: start_index,
+          restrictions: restrictions,
         }
       end
       let(:items_per_page) { 5 }
       let(:start_index) { 3 }
+      let(:restrictions) { "active-companies" }
 
       before do
         stub_request(
           :get,
           "#{example_endpoint}/#{rest_path}?items_per_page=#{items_per_page}\
-&q=#{query}&start_index=#{start_index}",
+&q=#{query}&start_index=#{start_index}&restrictions=#{restrictions}",
         ).
           with(basic_auth: [api_key, ""]).
           to_return(body: '{"companies": "data"}', status: status)
@@ -537,6 +540,255 @@ describe CompaniesHouse::Client do
 
       it "returns a parsed JSON representation" do
         expect(response).to eq("filing_history_item" => "data")
+      end
+
+      it_behaves_like "sends one happy notification"
+    end
+  end
+
+  describe "#persons_with_significant_control_corporate_entity_beneficial_owner" do
+    subject(:response) { client.persons_with_significant_control_corporate_entity_beneficial_owner(company_id, psc_id) }
+
+    include_context "test client"
+
+    let(:psc_id) { "psc123" }
+    let(:rest_path) do
+      "company/#{company_id}/persons-with-significant-control/corporate-entity-beneficial-owner/#{psc_id}"
+    end
+    let(:request_method) { "persons_with_significant_control_corporate_entity_beneficial_owner" }
+    let(:rest_query) { {} }
+
+    before do
+      stub_request(:get, "#{example_endpoint}/#{rest_path}").
+        with(basic_auth: [api_key, ""]).
+        to_return(body: '{"psc": "data"}', status: status)
+    end
+
+    context "against a functioning API" do
+      let(:status) { 200 }
+
+      it "returns a parsed JSON representation" do
+        expect(response).to eq("psc" => "data")
+      end
+
+      it_behaves_like "sends one happy notification"
+    end
+  end
+
+  describe "#persons_with_significant_control_corporate_entity" do
+    subject(:response) { client.persons_with_significant_control_corporate_entity(company_id, psc_id) }
+
+    include_context "test client"
+
+    let(:psc_id) { "psc123" }
+    let(:rest_path) { "company/#{company_id}/persons-with-significant-control/corporate-entity/#{psc_id}" }
+    let(:request_method) { "persons_with_significant_control_corporate_entity" }
+    let(:rest_query) { {} }
+
+    before do
+      stub_request(:get, "#{example_endpoint}/#{rest_path}").
+        with(basic_auth: [api_key, ""]).
+        to_return(body: '{"psc": "data"}', status: status)
+    end
+
+    context "against a functioning API" do
+      let(:status) { 200 }
+
+      it "returns a parsed JSON representation" do
+        expect(response).to eq("psc" => "data")
+      end
+
+      it_behaves_like "sends one happy notification"
+    end
+  end
+
+  describe "#persons_with_significant_control_individual_beneficial_owner" do
+    subject(:response) { client.persons_with_significant_control_individual_beneficial_owner(company_id, psc_id) }
+
+    include_context "test client"
+
+    let(:psc_id) { "psc123" }
+    let(:rest_path) { "company/#{company_id}/persons-with-significant-control/individual-beneficial-owner/#{psc_id}" }
+    let(:request_method) { "persons_with_significant_control_individual_beneficial_owner" }
+    let(:rest_query) { {} }
+
+    before do
+      stub_request(:get, "#{example_endpoint}/#{rest_path}").
+        with(basic_auth: [api_key, ""]).
+        to_return(body: '{"psc": "data"}', status: status)
+    end
+
+    context "against a functioning API" do
+      let(:status) { 200 }
+
+      it "returns a parsed JSON representation" do
+        expect(response).to eq("psc" => "data")
+      end
+
+      it_behaves_like "sends one happy notification"
+    end
+  end
+
+  describe "#persons_with_significant_control_individual" do
+    subject(:response) { client.persons_with_significant_control_individual(company_id, psc_id) }
+
+    include_context "test client"
+
+    let(:psc_id) { "psc123" }
+    let(:rest_path) { "company/#{company_id}/persons-with-significant-control/individual/#{psc_id}" }
+    let(:request_method) { "persons_with_significant_control_individual" }
+    let(:rest_query) { {} }
+
+    before do
+      stub_request(:get, "#{example_endpoint}/#{rest_path}").
+        with(basic_auth: [api_key, ""]).
+        to_return(body: '{"psc": "data"}', status: status)
+    end
+
+    context "against a functioning API" do
+      let(:status) { 200 }
+
+      it "returns a parsed JSON representation" do
+        expect(response).to eq("psc" => "data")
+      end
+
+      it_behaves_like "sends one happy notification"
+    end
+  end
+
+  describe "#persons_with_significant_control_legal_person_beneficial_owner" do
+    subject(:response) { client.persons_with_significant_control_legal_person_beneficial_owner(company_id, psc_id) }
+
+    include_context "test client"
+
+    let(:psc_id) { "psc123" }
+    let(:rest_path) { "company/#{company_id}/persons-with-significant-control/legal-person-beneficial-owner/#{psc_id}" }
+    let(:request_method) { "persons_with_significant_control_legal_person_beneficial_owner" }
+    let(:rest_query) { {} }
+
+    before do
+      stub_request(:get, "#{example_endpoint}/#{rest_path}").
+        with(basic_auth: [api_key, ""]).
+        to_return(body: '{"psc": "data"}', status: status)
+    end
+
+    context "against a functioning API" do
+      let(:status) { 200 }
+
+      it "returns a parsed JSON representation" do
+        expect(response).to eq("psc" => "data")
+      end
+
+      it_behaves_like "sends one happy notification"
+    end
+  end
+
+  describe "#persons_with_significant_control_legal_person" do
+    subject(:response) { client.persons_with_significant_control_legal_person(company_id, psc_id) }
+
+    include_context "test client"
+
+    let(:psc_id) { "psc123" }
+    let(:rest_path) { "company/#{company_id}/persons-with-significant-control/legal-person/#{psc_id}" }
+    let(:request_method) { "persons_with_significant_control_legal_person" }
+    let(:rest_query) { {} }
+
+    before do
+      stub_request(:get, "#{example_endpoint}/#{rest_path}").
+        with(basic_auth: [api_key, ""]).
+        to_return(body: '{"psc": "data"}', status: status)
+    end
+
+    context "against a functioning API" do
+      let(:status) { 200 }
+
+      it "returns a parsed JSON representation" do
+        expect(response).to eq("psc" => "data")
+      end
+
+      it_behaves_like "sends one happy notification"
+    end
+  end
+
+  describe "#persons_with_significant_control_super_secure_beneficial_owner" do
+    subject(:response) do
+      client.persons_with_significant_control_super_secure_beneficial_owner(company_id, super_secure_id)
+    end
+
+    include_context "test client"
+
+    let(:super_secure_id) { "super123" }
+    let(:rest_path) do
+      "company/#{company_id}/persons-with-significant-control/super-secure-beneficial-owner/#{super_secure_id}"
+    end
+    let(:request_method) { "persons_with_significant_control_super_secure_beneficial_owner" }
+    let(:rest_query) { {} }
+
+    before do
+      stub_request(:get, "#{example_endpoint}/#{rest_path}").
+        with(basic_auth: [api_key, ""]).
+        to_return(body: '{"psc": "data"}', status: status)
+    end
+
+    context "against a functioning API" do
+      let(:status) { 200 }
+
+      it "returns a parsed JSON representation" do
+        expect(response).to eq("psc" => "data")
+      end
+
+      it_behaves_like "sends one happy notification"
+    end
+  end
+
+  describe "#persons_with_significant_control_super_secure_person" do
+    subject(:response) { client.persons_with_significant_control_super_secure_person(company_id, super_secure_id) }
+
+    include_context "test client"
+
+    let(:super_secure_id) { "super123" }
+    let(:rest_path) { "company/#{company_id}/persons-with-significant-control/super-secure/#{super_secure_id}" }
+    let(:request_method) { "persons_with_significant_control_super_secure_person" }
+    let(:rest_query) { {} }
+
+    before do
+      stub_request(:get, "#{example_endpoint}/#{rest_path}").
+        with(basic_auth: [api_key, ""]).
+        to_return(body: '{"psc": "data"}', status: status)
+    end
+
+    context "against a functioning API" do
+      let(:status) { 200 }
+
+      it "returns a parsed JSON representation" do
+        expect(response).to eq("psc" => "data")
+      end
+
+      it_behaves_like "sends one happy notification"
+    end
+  end
+
+  describe "#persons_with_significant_control_statement" do
+    subject(:response) { client.persons_with_significant_control_statement(company_id, statement_id) }
+
+    include_context "test client"
+
+    let(:statement_id) { "statement123" }
+    let(:rest_path) { "company/#{company_id}/persons-with-significant-control-statements/#{statement_id}" }
+    let(:request_method) { "persons_with_significant_control_statement" }
+    let(:rest_query) { {} }
+
+    before do
+      stub_request(:get, "#{example_endpoint}/#{rest_path}").
+        with(basic_auth: [api_key, ""]).
+        to_return(body: '{"psc_statement": "data"}', status: status)
+    end
+
+    context "against a functioning API" do
+      let(:status) { 200 }
+
+      it "returns a parsed JSON representation" do
+        expect(response).to eq("psc_statement" => "data")
       end
 
       it_behaves_like "sends one happy notification"
