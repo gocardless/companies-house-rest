@@ -13,17 +13,17 @@ see the gem [companies-house-gateway](https://github.com/gocardless/companies-ho
 
 Quick start:
 
-- Register an account via the `Sign In / Register` link
+* Register an account via the `Sign In / Register` link
   [on the CompaniesHouse Developers website](https://developer.company-information.service.gov.uk/)
-- Register an API key at [Your Applications](https://developer.company-information.service.gov.uk/manage-applications)
-- Put your API key in an environment variable (not in your code):
+* Register an API key at [Your Applications](https://developer.company-information.service.gov.uk/manage-applications)
+* Put your API key in an environment variable (not in your code):
 
 ```shell
 export COMPANIES_HOUSE_API_KEY=YOUR_API_KEY_HERE
 ```
 
-- Install `companies-house-rest` through [RubyGems](https://rubygems.org/gems/companies-house-rest)
-- Create and use a client:
+* Install `companies-house-rest` through [RubyGems](https://rubygems.org/gems/companies-house-rest)
+* Create and use a client:
 
 ```ruby
 require 'companies_house/client'
@@ -51,11 +51,11 @@ Developers should read
 before using this API, and will note that these guidelines contain several
 instructions regarding API keys:
 
-- Do not embed API keys in your code
-- Do not store API keys in your source tree
-- Restrict API key use by IP address and domain
-- **Regenerate your API keys regularly**
-- Delete API keys when no longer required
+* Do not embed API keys in your code
+* Do not store API keys in your source tree
+* Restrict API key use by IP address and domain
+* **Regenerate your API keys regularly**
+* Delete API keys when no longer required
 
 ## Client Initialization
 
@@ -84,7 +84,7 @@ If you are using Rails or the `ActiveSupport` gem, instrumentation will happen a
 
 Once a client has been initialised, requests can be made to the API.
 Details of the available fields in the response are in the Companies House
-[documentation](https://developer-specs.company-information.service.gov.uk/).
+[documentation](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/reference).
 The endpoints currently implemented by the gem are:
 
 | Client Method                                                                                      | Endpoint                                                                                                       | Description                                                      |
