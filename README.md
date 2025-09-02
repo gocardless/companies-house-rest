@@ -4,9 +4,8 @@
 
 This Gem implements an API client for the Companies House REST API. It can be
 used to look up information about companies registered in the United Kingdom.
-As of July 2016, this API is described by Companies House as a "beta service."
 More information about this free API can be found
-[on the Companies House API website](https://developer.companieshouse.gov.uk/api/docs/index.html).
+[on the Companies House API website](https://developer.company-information.service.gov.uk/).
 
 To interact the older [CompaniesHouse XML-based API](http://xmlgw.companieshouse.gov.uk/),
 see the gem [companies-house-gateway](https://github.com/gocardless/companies-house-gateway-ruby).
@@ -15,8 +14,8 @@ see the gem [companies-house-gateway](https://github.com/gocardless/companies-ho
 Quick start:
 
 * Register an account via the `Sign In / Register` link
-[on the CompaniesHouse Developers website](https://developer.companieshouse.gov.uk/api/docs/)
-* Register an API key at [Your Applications](https://developer.companieshouse.gov.uk/developer/applications)
+[on the CompaniesHouse Developers website](https://developer.company-information.service.gov.uk/)
+* Register an API key at [Your Applications](https://developer.company-information.service.gov.uk/manage-applications)
 * Put your API key in an environment variable (not in your code):
 
 ``` shell
@@ -45,10 +44,10 @@ alphabetic characters such as `NI` or `SC`.
 ## Authentication
 
 Using the Companies House REST API requires you to register an account
-[on the CompaniesHouse Developers website](https://developer.companieshouse.gov.uk/api/docs/)
-and [configure an API key](https://developer.companieshouse.gov.uk/developer/applications).
+[on the CompaniesHouse Developers website](https://developer.company-information.service.gov.uk/)
+and [configure an API key](https://developer.company-information.service.gov.uk/manage-applications).
 Developers should read
-[the Companies House developer guidelines](https://developer.companieshouse.gov.uk/api/docs/index/gettingStarted/developerGuidelines.html)
+[the Companies House developer guidelines](https://developer.company-information.service.gov.uk/developer-guidelines)
 before using this API, and will note that these guidelines contain several
 instructions regarding API keys:
 
@@ -85,7 +84,7 @@ If you are using Rails or the `ActiveSupport` gem, instrumentation will happen a
 
 Once a client has been initialised, requests can be made to the API.
 Details of the available fields in the response are in the Companies House
-[documentation](https://developer.companieshouse.gov.uk/api/docs/index.html).
+[documentation](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/reference).
 The endpoints currently implemented by the gem are:
 
 | Client Method                                                   | Endpoint                                | Description |
@@ -93,41 +92,44 @@ The endpoints currently implemented by the gem are:
 | `.company(company_number)`                                      | `GET /company/:company_number`          | Retrieves a company profile. |
 | `.officers(company_number)`                                     | `GET /company/:company_number/officers` | Retrieves a list of company officers. |
 | `.company_search(query, items_per_page: nil, start_index: nil)` | `GET /search/companies`                 | Retrieves a list of companies that match the given query. |
+| `.filing_history_list(company_number)`                          | `GET /company/:company_number/filing-history` | Retrieves a list of company filings. |
+| `.filing_history_item(company_number, transaction_id)`          | `GET /company/:company_number/filing-history/:transaction_id` | Retrieves a company filing. |
 
 ### .company
 
-This method implements the [readCompanyProfile](https://developer.companieshouse.gov.uk/api/docs/company/company_number/readCompanyProfile.html)
-API and returns the full [companyProfile](https://developer.companieshouse.gov.uk/api/docs/company/company_number/companyProfile-resource.html)
+This method implements the [readCompanyProfile](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/reference/company-profile/company-profile)
+API and returns the full [companyProfile](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/resources/companyprofile)
 resource.
 
 ### .officers
 
-This method implements the [officersList](https://developer.companieshouse.gov.uk/api/docs/company/company_number/officers/officerList.html)
+This method implements the [officersList](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/reference/officers/list)
 API. It will make one or more requests against this API, as necessary, to obtain
 the full list of company officers. It returns only the values under the `items`
 key from the
-[officerList](https://developer.companieshouse.gov.uk/api/docs/company/company_number/officers/officerList-resource.html)
+[officerList](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/resources/officerlist)
 resource(s) which it reads.
 
 ### .company_search
 
-This method implements the [searchCompanies](https://developer.companieshouse.gov.uk/api/docs/search/companies/companysearch.html)
-API and returns the list of [companySearch](https://developer.companieshouse.gov.uk/api/docs/search-overview/CompanySearch-resource.html)
+This method implements the [searchCompanies](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/reference/search/search-companies)
+API and returns the list of [companySearch](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/resources/companysearch)
 resources that match the given query. The `items_per_page` and `start_index` parameters are optional.
 
 ### .filing_history_list
 
-This method implements the [filingHistoryList](https://developer.companieshouse.gov.uk/api/docs/company/company_number/filing-history/getFilingHistoryList.html) API and returns the full [filingHistoryList](https://developer.companieshouse.gov.uk/api/docs/company/company_number/filing-history/filingHistoryList-resource.html) resource.
+This method implements the [filingHistoryList](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/reference/filing-history/list) API and returns the full
+[filingHistoryList](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/resources/filinghistorylist) resource.
 
 ### .filing_history_item
 
-This method implements the [filingHistoryItem](https://developer.companieshouse.gov.uk/api/docs/company/company_number/filing-history/transaction_id/getFilingHistoryItem.html) API and returns the full
-[filingHistoryItem](https://developer.companieshouse.gov.uk/api/docs/company/company_number/filing-history/filingHistoryItem-resource.html) resource.
+This method implements the [filingHistoryItem](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/reference/filing-history/filinghistoryitem-resource) API and returns the full
+[filingHistoryItem](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/resources/filinghistoryitem) resource.
 
 ### Other API Methods
 
 While there are other resources exposed by the
-[Companies House API](https://developer.companieshouse.gov.uk/api/docs/index.html),
+[Companies House API](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/reference),
 this gem does not implement access to these resources at this time.
 
 ## Error Handling
