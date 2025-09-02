@@ -13,17 +13,17 @@ see the gem [companies-house-gateway](https://github.com/gocardless/companies-ho
 
 Quick start:
 
-* Register an account via the `Sign In / Register` link
+- Register an account via the `Sign In / Register` link
   [on the CompaniesHouse Developers website](https://developer.company-information.service.gov.uk/)
-* Register an API key at [Your Applications](https://developer.company-information.service.gov.uk/manage-applications)
-* Put your API key in an environment variable (not in your code):
+- Register an API key at [Your Applications](https://developer.company-information.service.gov.uk/manage-applications)
+- Put your API key in an environment variable (not in your code):
 
 ```shell
 export COMPANIES_HOUSE_API_KEY=YOUR_API_KEY_HERE
 ```
 
-* Install `companies-house-rest` through [RubyGems](https://rubygems.org/gems/companies-house-rest)
-* Create and use a client:
+- Install `companies-house-rest` through [RubyGems](https://rubygems.org/gems/companies-house-rest)
+- Create and use a client:
 
 ```ruby
 require 'companies_house/client'
@@ -51,11 +51,11 @@ Developers should read
 before using this API, and will note that these guidelines contain several
 instructions regarding API keys:
 
-* Do not embed API keys in your code
-* Do not store API keys in your source tree
-* Restrict API key use by IP address and domain
-* **Regenerate your API keys regularly**
-* Delete API keys when no longer required
+- Do not embed API keys in your code
+- Do not store API keys in your source tree
+- Restrict API key use by IP address and domain
+- **Regenerate your API keys regularly**
+- Delete API keys when no longer required
 
 ## Client Initialization
 
@@ -97,6 +97,8 @@ The endpoints currently implemented by the gem are:
 | `.persons_with_significant_control_corporate_entity(company_number, psc_id)`                       | `GET /company/:company_number/persons-with-significant-control/corporate-entity/:psc_id`                       | Retrieves a corporate entity.                                    |
 | `.persons_with_significant_control_individual_beneficial_owner(company_number, psc_id)`            | `GET /company/:company_number/persons-with-significant-control/individual-beneficial-owner/:psc_id`            | Retrieves an individual beneficial owner.                        |
 | `.persons_with_significant_control_individual(company_number, psc_id)`                             | `GET /company/:company_number/persons-with-significant-control/individual/:psc_id`                             | Retrieves an individual.                                         |
+| `.persons_with_significant_control_individual_with_verification_state(company_number, psc_id)`.    | `GET /company/:company_number/persons-with-significant-control/individual/:psc_id/verification-state`          | Retrieves an individual with verification state.                 |
+| `.persons_with_significant_control_individual_full_record(company_number, psc_id)`                 | `GET /company/:company_number/persons-with-significant-control/individual/:psc_id/full_record`                 | Retrieves the full record of an individual.                      |
 | `.persons_with_significant_control_legal_person_beneficial_owner(company_number, psc_id)`          | `GET /company/:company_number/persons-with-significant-control/legal-person-beneficial-owner/:psc_id`          | Retrieves a legal person beneficial owner.                       |
 | `.persons_with_significant_control_legal_person(company_number, psc_id)`                           | `GET /company/:company_number/persons-with-significant-control/legal-person/:psc_id`                           | Retrieves a legal person.                                        |
 | `.persons_with_significant_control_super_secure_beneficial_owner(company_number, super_secure_id)` | `GET /company/:company_number/persons-with-significant-control/super-secure-beneficial-owner/:super_secure_id` | Retrieves a super secure beneficial owner.                       |
@@ -146,6 +148,14 @@ This method implements the [getIndividualBeneficialOwner](https://developer-spec
 ### .persons_with_significant_control_individual
 
 This method implements the [getIndividual](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/reference/persons-with-significant-control/get-individual) API and returns the [individual](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/resources/individual) resource.
+
+### .persons_with_significant_control_individual_with_verification_state
+
+This method implements the [getIndividualWithVerificationState](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/reference/persons-with-significant-control/get-individual-with-verification-state) API and returns the [individual](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/resources/individual) resource.
+
+### .persons_with_significant_control_individual_full_record
+
+This method implements the [getIndividualFullRecord](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/reference/persons-with-significant-control/get-individual-full-record) API and returns the [individual](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/resources/individual) resource.
 
 ### .persons_with_significant_control_legal_person_beneficial_owner
 

@@ -656,6 +656,64 @@ describe CompaniesHouse::Client do
     end
   end
 
+  describe "#persons_with_significant_control_individual_with_verification_state" do
+    subject(:response) do
+      client.persons_with_significant_control_individual_with_verification_state(company_id, psc_id)
+    end
+
+    include_context "test client"
+
+    let(:psc_id) { "psc123" }
+    let(:rest_path) { "company/#{company_id}/persons-with-significant-control/individual/#{psc_id}/verification-state" }
+    let(:request_method) { "persons_with_significant_control_individual_with_verification_state" }
+    let(:rest_query) { {} }
+
+    before do
+      stub_request(:get, "#{example_endpoint}/#{rest_path}").
+        with(basic_auth: [api_key, ""]).
+        to_return(body: '{"psc": "data"}', status: status)
+    end
+
+    context "against a functioning API" do
+      let(:status) { 200 }
+
+      it "returns a parsed JSON representation" do
+        expect(response).to eq("psc" => "data")
+      end
+
+      it_behaves_like "sends one happy notification"
+    end
+  end
+
+  describe "#persons_with_significant_control_individual_full_record" do
+    subject(:response) do
+      client.persons_with_significant_control_individual_full_record(company_id, psc_id)
+    end
+
+    include_context "test client"
+
+    let(:psc_id) { "psc123" }
+    let(:rest_path) { "company/#{company_id}/persons-with-significant-control/individual/#{psc_id}/full_record" }
+    let(:request_method) { "persons_with_significant_control_individual_full_record" }
+    let(:rest_query) { {} }
+
+    before do
+      stub_request(:get, "#{example_endpoint}/#{rest_path}").
+        with(basic_auth: [api_key, ""]).
+        to_return(body: '{"psc": "data"}', status: status)
+    end
+
+    context "against a functioning API" do
+      let(:status) { 200 }
+
+      it "returns a parsed JSON representation" do
+        expect(response).to eq("psc" => "data")
+      end
+
+      it_behaves_like "sends one happy notification"
+    end
+  end
+
   describe "#persons_with_significant_control_legal_person_beneficial_owner" do
     subject(:response) { client.persons_with_significant_control_legal_person_beneficial_owner(company_id, psc_id) }
 

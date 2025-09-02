@@ -88,6 +88,20 @@ module CompaniesHouse
       )
     end
 
+    def persons_with_significant_control_individual_with_verification_state(id, psc_id)
+      request(
+        resource: :persons_with_significant_control_individual_with_verification_state,
+        path: "company/#{id}/persons-with-significant-control/individual/#{psc_id}/verification-state",
+      )
+    end
+
+    def persons_with_significant_control_individual_full_record(id, psc_id)
+      request(
+        resource: :persons_with_significant_control_individual_full_record,
+        path: "company/#{id}/persons-with-significant-control/individual/#{psc_id}/full_record",
+      )
+    end
+
     def persons_with_significant_control_legal_person_beneficial_owner(id, psc_id)
       request(
         resource: :persons_with_significant_control_legal_person_beneficial_owner,
