@@ -7,7 +7,7 @@ gemspec
 
 # Development dependencies
 gem "activesupport", ">= 4.2", "< 8"
-gem "gc_ruboconfig", "~> 5.0"
+gem "gc_ruboconfig", "~> 6.0"
 gem "rake", "~> 13.0"
 gem "rspec", "~> 3.5"
 gem "rspec_junit_formatter", "~> 0.6.0"
