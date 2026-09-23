@@ -17,6 +17,8 @@ module CompaniesHouse
   # Users of the CompaniesHouse gem should not instantiate this class
   # and should instead use CompaniesHouse::Client.
   class Request < Dry::Struct
+    TRAVERSAL_SEGMENTS = %w[. ..].freeze
+
     # API-level attributes
     attribute :connection, Dry.Types.Instance(Net::HTTP)
     attribute :api_key, Dry.Types::String
@@ -36,6 +38,8 @@ module CompaniesHouse
 
     def initialize(args)
       super
+
+      validate_path!(path)
 
       @uri = URI.join(endpoint, path)
       @uri.query = URI.encode_www_form(query)
@@ -65,6 +69,15 @@ module CompaniesHouse
     end
 
     private
+
+    # URI.join performs RFC 3986 dot-segment removal, so a "." or ".." segment
+    # reaching here from an interpolated identifier would silently retarget the
+    # request at a different endpoint rather than failing.
+    def validate_path!(path)
+      return if (path.split("/") & TRAVERSAL_SEGMENTS).empty?
+
+      raise ArgumentError, "Invalid path: #{path.inspect}"
+    end
 
     def request_resource(uri)
       req = Net::HTTP::Get.new(uri)

@@ -130,6 +130,48 @@ describe CompaniesHouse::Client do
     end
   end
 
+  describe "path injection via identifiers" do
+    include_context "test client"
+
+    # WebMock is in disable_net_connect! mode, so any request to a path other than
+    # the stubbed one raises NetConnectNotAllowedError and fails the example.
+    def expect_request_to(path, query = {})
+      stub = stub_request(:get, "#{example_endpoint}/#{path}").
+        with(basic_auth: [api_key, ""], query: query).
+        to_return(body: '{"items":[],"total_results":0}', status: 200)
+      yield
+      expect(stub).to have_been_requested
+    end
+
+    it "contains a traversal id instead of re-anchoring the request" do
+      expect_request_to("company/..%2Fsearch%2Fcompanies") do
+        client.company("../search/companies")
+      end
+    end
+
+    it "contains a bare path separator instead of re-anchoring the request" do
+      expect_request_to("company/00000006%2Fofficers") do
+        client.company("00000006/officers")
+      end
+    end
+
+    it "contains a traversal in a trailing identifier" do
+      expect_request_to("company/#{company_id}/filing-history/..%2F..%2Fsearch") do
+        client.filing_history_item(company_id, "../../search")
+      end
+    end
+
+    it "contains a traversal in a paginated resource" do
+      expect_request_to("company/..%2Fsearch/officers", { "start_index" => 0 }) do
+        client.officers("../search")
+      end
+    end
+
+    it "leaves a well-formed id unchanged" do
+      expect_request_to("company/#{company_id}") { client.company(company_id) }
+    end
+  end
+
   describe "#officers" do
     subject(:response) { client.officers(company_id) }
 
