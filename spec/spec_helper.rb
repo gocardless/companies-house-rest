@@ -20,7 +20,7 @@ shared_context "test client" do
 end
 
 shared_examples "an error response" do
-  # rubocop:disable RSpec/ExampleLength, RSpec/MultipleExpectations
+  # rubocop:disable-next RSpec/ExampleLength, RSpec/MultipleExpectations
   it "raises a specific APIError" do
     expect { response }.to raise_error do |error|
       expect(error).to be_a(error_class)
@@ -29,7 +29,6 @@ shared_examples "an error response" do
       expect(error.message).to eq(message)
     end
   end
-  # rubocop:enable RSpec/ExampleLength, RSpec/MultipleExpectations
 
   it_behaves_like "sends one notification"
 end
@@ -88,7 +87,7 @@ end
 shared_examples "sends one notification" do
   let(:time) { Time.now.utc }
 
-  # rubocop:disable RSpec/ExampleLength
+  # rubocop:disable-next RSpec/ExampleLength
   it "records an instrumentation" do
     i = 0
     allow(SecureRandom).to receive(:hex).with(10) do
@@ -125,5 +124,4 @@ shared_examples "sends one notification" do
       ""
     end
   end
-  # rubocop:enable RSpec/ExampleLength
 end

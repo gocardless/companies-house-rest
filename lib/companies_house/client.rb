@@ -3,6 +3,7 @@
 require "companies_house/request"
 require "companies_house/instrumentation/null"
 require "companies_house/instrumentation/active_support"
+require "erb"
 require "net/http"
 require "securerandom"
 
@@ -41,20 +42,20 @@ module CompaniesHouse
     def company(id)
       request(
         resource: :company,
-        path: "company/#{id}",
+        path: "company/#{escape(id)}",
         params: {},
         resource_id: id,
       )
     end
 
     def officers(id)
-      get_all_pages(:officers, "company/#{id}/officers", id)
+      get_all_pages(:officers, "company/#{escape(id)}/officers", id)
     end
 
     def persons_with_significant_control(id, register_view: false)
       get_all_pages(
         :persons_with_significant_control,
-        "company/#{id}/persons-with-significant-control",
+        "company/#{escape(id)}/persons-with-significant-control",
         id,
         register_view: register_view,
       )
@@ -63,77 +64,79 @@ module CompaniesHouse
     def persons_with_significant_control_corporate_entity_beneficial_owner(id, psc_id)
       request(
         resource: :persons_with_significant_control_corporate_entity_beneficial_owner,
-        path: "company/#{id}/persons-with-significant-control/corporate-entity-beneficial-owner/#{psc_id}",
+        path: "company/#{escape(id)}/persons-with-significant-control/" \
+              "corporate-entity-beneficial-owner/#{escape(psc_id)}",
       )
     end
 
     def persons_with_significant_control_corporate_entity(id, psc_id)
       request(
         resource: :persons_with_significant_control_corporate_entity,
-        path: "company/#{id}/persons-with-significant-control/corporate-entity/#{psc_id}",
+        path: "company/#{escape(id)}/persons-with-significant-control/corporate-entity/#{escape(psc_id)}",
       )
     end
 
     def persons_with_significant_control_individual_beneficial_owner(id, psc_id)
       request(
         resource: :persons_with_significant_control_individual_beneficial_owner,
-        path: "company/#{id}/persons-with-significant-control/individual-beneficial-owner/#{psc_id}",
+        path: "company/#{escape(id)}/persons-with-significant-control/individual-beneficial-owner/#{escape(psc_id)}",
       )
     end
 
     def persons_with_significant_control_individual(id, psc_id)
       request(
         resource: :persons_with_significant_control_individual,
-        path: "company/#{id}/persons-with-significant-control/individual/#{psc_id}",
+        path: "company/#{escape(id)}/persons-with-significant-control/individual/#{escape(psc_id)}",
       )
     end
 
     def persons_with_significant_control_individual_with_verification_state(id, psc_id)
       request(
         resource: :persons_with_significant_control_individual_with_verification_state,
-        path: "company/#{id}/persons-with-significant-control/individual/#{psc_id}/verification-state",
+        path: "company/#{escape(id)}/persons-with-significant-control/individual/#{escape(psc_id)}/verification-state",
       )
     end
 
     def persons_with_significant_control_individual_full_record(id, psc_id)
       request(
         resource: :persons_with_significant_control_individual_full_record,
-        path: "company/#{id}/persons-with-significant-control/individual/#{psc_id}/full_record",
+        path: "company/#{escape(id)}/persons-with-significant-control/individual/#{escape(psc_id)}/full_record",
       )
     end
 
     def persons_with_significant_control_legal_person_beneficial_owner(id, psc_id)
       request(
         resource: :persons_with_significant_control_legal_person_beneficial_owner,
-        path: "company/#{id}/persons-with-significant-control/legal-person-beneficial-owner/#{psc_id}",
+        path: "company/#{escape(id)}/persons-with-significant-control/legal-person-beneficial-owner/#{escape(psc_id)}",
       )
     end
 
     def persons_with_significant_control_legal_person(id, psc_id)
       request(
         resource: :persons_with_significant_control_legal_person,
-        path: "company/#{id}/persons-with-significant-control/legal-person/#{psc_id}",
+        path: "company/#{escape(id)}/persons-with-significant-control/legal-person/#{escape(psc_id)}",
       )
     end
 
     def persons_with_significant_control_super_secure_beneficial_owner(id, super_secure_id)
       request(
         resource: :persons_with_significant_control_super_secure_beneficial_owner,
-        path: "company/#{id}/persons-with-significant-control/super-secure-beneficial-owner/#{super_secure_id}",
+        path: "company/#{escape(id)}/persons-with-significant-control/" \
+              "super-secure-beneficial-owner/#{escape(super_secure_id)}",
       )
     end
 
     def persons_with_significant_control_super_secure_person(id, super_secure_id)
       request(
         resource: :persons_with_significant_control_super_secure_person,
-        path: "company/#{id}/persons-with-significant-control/super-secure/#{super_secure_id}",
+        path: "company/#{escape(id)}/persons-with-significant-control/super-secure/#{escape(super_secure_id)}",
       )
     end
 
     def persons_with_significant_control_statements(id, register_view: false)
       get_all_pages(
         :persons_with_significant_control_statements,
-        "company/#{id}/persons-with-significant-control-statements",
+        "company/#{escape(id)}/persons-with-significant-control-statements",
         id,
         register_view: register_view,
       )
@@ -142,18 +145,18 @@ module CompaniesHouse
     def persons_with_significant_control_statement(id, statement_id)
       request(
         resource: :persons_with_significant_control_statement,
-        path: "company/#{id}/persons-with-significant-control-statements/#{statement_id}",
+        path: "company/#{escape(id)}/persons-with-significant-control-statements/#{escape(statement_id)}",
       )
     end
 
     def filing_history_list(id)
-      get_all_pages(:filing_history_list, "company/#{id}/filing-history", id)
+      get_all_pages(:filing_history_list, "company/#{escape(id)}/filing-history", id)
     end
 
     def filing_history_item(id, transaction_id)
       request(
         resource: :filing_history_item,
-        path: "company/#{id}/filing-history/#{transaction_id}",
+        path: "company/#{escape(id)}/filing-history/#{escape(transaction_id)}",
       )
     end
 
@@ -223,6 +226,12 @@ module CompaniesHouse
       end
 
       items
+    end
+
+    # Identifiers are interpolated into request paths, so a raw "/" or ".."
+    # would let a caller-supplied value re-anchor the request at another endpoint.
+    def escape(segment)
+      ERB::Util.url_encode(segment.to_s)
     end
 
     def make_transaction_id
