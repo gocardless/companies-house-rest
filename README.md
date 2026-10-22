@@ -31,6 +31,10 @@ client = CompaniesHouse::Client.new(api_key: ENV['COMPANIES_HOUSE_API_KEY'])
 profile = client.company('07495895')
 ```
 
+If every request returns 401, the usual causes are a test (sandbox) key used against the live
+API, or a stream key instead of an API key. [This checklist](https://registrum.co.uk/guides/companies-house-api-key-not-working)
+goes through them.
+
 ## Overview
 
 This gem is meant to provide a simple synchronous API to look up company profile
